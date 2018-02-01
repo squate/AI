@@ -1,0 +1,67 @@
+Nathaniel Levy(1-4), Alan Sato(5-8)
+
+2.4: PEAS description of the following:
+    Playing Soccer
+        Agent:
+            soccer player
+        Performance measures:
+            scoring goals, stopping opposing goals, following rules,
+            ball-handling reliability, passing, taking strategic dives
+        Environment:
+            Soccer field, ball, teammates, opposing team,
+        Actuators:
+            Body(general balance and movement),  legs (running), feet (kicking),
+            head(heading)
+        Sensors:
+            Eyes, gyroscope for balance, touch receptors on feet during kicking,
+    Exploring the subsurface oceans of Titan
+        Agent:
+            a rover that arrived on some sort of rocket
+        Performance measures
+            surviving transit, gathering information, effective mobility,
+            sending information to earth, control-lag, if automated, pathfinding,
+            photo resolution, energy efficiency, durability, water-resistance
+        Environment:
+            Earth, then a rocket, then hopefully the oceans of Titan forever,
+            which are as of yet unexplored, maybe some life forms but nah
+        Actuators:
+            Camera, swimming motors, transmitting antenna, grasping claw,
+            confetti cannon in case we discover life
+        Sensors:
+            control receiving antenna, visual sensors, depth sensor, gyroscope,
+            compass(if that's a thing that works on titan I have no idea),
+            water-analysis sensors, sonar because why not
+    Shopping for used AI books on the internet:
+        Agent:
+            shopper
+        Performance measure:
+            buying the right books, buying them in a timely manner, saving money
+        Environment:
+            The internet, specifically the parts of it that sell use AI books
+        Actuators:
+            web-navigator, search engine keyword-chooser, address form-filler,
+            credit card information, possibly a captcha-bypass
+        Sensors:
+            html parser, possibly integrated with some nlp for purchasing and
+            shipping info, user-input book criteria, scam-detector, price
+            comparison database maker, checker
+    Playing a tennis match
+        Agent:
+            tennis-player
+        Performance measure:
+            points scored, points allowed, sportsmanship, flair,
+        Environment:
+            tennis court, tennis racket, opponent, audience, sponsors
+        Actuators:
+            racket-mover, self-mover, ball-thrower(for serving)
+        Sensors:
+            court-boundary awareness, ball-tracking & trajectory prediction,
+            balance, arm position, opponent action-prediction
+            referee interruption (whether or not to start playing that moment)
+    Practicing tennis against a wall
+
+    Performing a high jump
+
+    Knitting a sweater
+
+    Bidding on an item at an auction
