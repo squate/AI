@@ -59,9 +59,47 @@ Nathaniel Levy(1-4), Alan Sato(5-8)
             balance, arm position, opponent action-prediction
             referee interruption (whether or not to start playing that moment)
     Practicing tennis against a wall
-
+        Agent:
+            tennis-player
+        Performance Measure:
+            count missed, count hit
+        Environment:
+            wall, tennis racket, half tennis court
+        Actuators:
+            arms
+        Sensors:
+            vision, and the sense of if actually hit the ball    
     Performing a high jump
-
+        Agent:
+            high jumper
+        Performance Measure:
+            height of jump
+        Environment:
+            bar to jump over, track to run
+        Actuators:
+            arms, legs, back
+        Sensors:
+            vision
     Knitting a sweater
-
+        Agent:
+            knitter
+        Performance Measure:
+            stiches per inch, sweaters per hour
+        Environment:
+            your family to wear all the knitted goods
+        Actuators:
+            needle hands, yarn holding hands
+        Sensors:
+            stitch counter, tension measurerer
     Bidding on an item at an auction
+        Agent:
+            Bidder
+        Performance Measure:
+            Value/Price of Acquired Goods
+        Environment:
+            Auction, List Items, other bidders
+        Actuators:
+            Price Paddles
+        Sensors:
+            Speach Processor, Eye of the Beholder (to decifer Value)
+
