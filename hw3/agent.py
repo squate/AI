@@ -2,6 +2,8 @@
 #! /usr/bin/python3
 from random import randint
 from envi import *
+import math
+import queue
 DEBUG = False
 #:::::logger:::::
 def log(s):
@@ -15,8 +17,8 @@ class Agent: #comment
 #:::::Initialize the Agent with Variables:::::
     def __init__(self):
         self.name = "Bruce"
-        self.locX = randint(0,9)
-        self.locY = randint(0,9)
+        self.locX = 0
+        self.locY = 0
         self.stepCount = 0
 #:::::Getters and Setters:::::
     def setName (self,name): #set method for name
@@ -53,4 +55,26 @@ class Agent: #comment
         self.stepCount += 1
         log("to "+str(self.locX)+", "+str(self.locY)+")")
 #:::::algorithms:::::
-def aStar(self,dungeon):
+def DFS(self,env):
+
+class Node(self,env):
+    def __init__(x,y,v):
+        self.x = x
+        self.y = y
+        self.v = False
+    def visit(self):
+        self.v = True
+#def aStar(self,env):
+    #make tree starting from start
+
+    #q = queue.PriorityQueue(0)
+    #expand first in pq line
+    #x = self.getlocX()
+    #y = self.getlocY()
+    #mtx = makeAdjMatrix(self,env)
+    #cost = sqrt(pow((6-x),2)+(pow((6-y),2)))
+
+    #while Node != g
+        #if
+
+def makeAdjList(self,env):
