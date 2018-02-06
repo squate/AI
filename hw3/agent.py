@@ -1,15 +1,15 @@
+#!~/usr/bin/python3
 #Nate Levy, Alan Sato, SCI326 hw2
-#! /usr/bin/python3
 from random import randint
 from envi import *
-DEBUG = False
+#DEBUG = False
 #:::::logger:::::
-def log(s):
-    if DEBUG == True:
-        print(s)
-def log2(s,e):
-    if DEBUG == True:
-        print(s,end = e)
+#def log(s):
+#    if DEBUG == True:
+#        print(s)
+#def log2(s,e):
+#    if DEBUG == True:
+#        print(s,end = e)
 
 class Agent: #comment
 #:::::Initialize the Agent with Variables:::::
@@ -18,6 +18,7 @@ class Agent: #comment
         self.locX = randint(0,9)
         self.locY = randint(0,9)
         self.stepCount = 0
+        self.adj=[]
 #:::::Getters and Setters:::::
     def setName (self,name): #set method for name
         self.name = name
@@ -52,5 +53,13 @@ class Agent: #comment
         self.locX += self.speed
         self.stepCount += 1
         log("to "+str(self.locX)+", "+str(self.locY)+")")
+#:::::Sensors::::::
+    def isWall(self,env,x,y):
+        if env.grid[x][y]==3 :
+            return True
+        else:
+            return False
+#    def canMove(self,env):
+        
 #:::::algorithms:::::
-def aStar(self,dungeon):
+#    def aStar(self,dungeon): 
