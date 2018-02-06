@@ -11,8 +11,8 @@ def log(s):
         print(s)
 
 class envi:
-    def __init__(self):
-        self.sidelength = 6
+    def __init__(self,n):
+        self.sidelength = n
         self.grid = [[0] * self.sidelength for i in range(self.sidelength)]
         self.grid[self.sidelength-1][self.sidelength-1] = 3
         self.grid[0][0] = 8
