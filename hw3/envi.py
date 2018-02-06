@@ -23,6 +23,9 @@ class envi:
     def getSideLength(self):
         return self.sidelength
 
+    def visit(self,x,y):
+        self.grid[x][y] = 2
+
     def addWalls(self):
         wallnum = 0
         while wallnum < self.walls:
