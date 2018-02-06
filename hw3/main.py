@@ -13,6 +13,6 @@ def log2(s,e):
         print(s,end = e)
 
 def main():
-    dungeon = envi()
+    dungeon = envi(6)
     dungeon.addWalls()
     dungeon.showgrid()
