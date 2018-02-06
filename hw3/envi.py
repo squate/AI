@@ -41,9 +41,8 @@ class envi:
             log(gridline)
 
     def evaluate(self,agent):
-        d = self.dirtynum
         t = self.sidelength * self.sidelength
         s = agent.getstepCount()
-        score = (s+d)/t
+        score = (s)/t
         print("score (less is better): " +str(score))
         return score
