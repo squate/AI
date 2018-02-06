@@ -62,6 +62,9 @@ class Node(self,env):
         self.x = x
         self.y = y
         self.v = False
+        self.child1 = Null
+        self.child2 = null
+        self.child3
     def visit(self):
         self.v = True
 #def aStar(self,env):
