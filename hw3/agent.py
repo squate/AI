@@ -1,7 +1,9 @@
+#!~/usr/bin/python3
 #Nate Levy, Alan Sato, SCI326 hw2
-#! /usr/bin/python3
 from random import randint
 from envi import *
+import math
+import queue
 DEBUG = False
 #:::::logger:::::
 def log(s):
@@ -15,9 +17,10 @@ class Agent: #comment
 #:::::Initialize the Agent with Variables:::::
     def __init__(self):
         self.name = "Bruce"
-        self.locX = randint(0,9)
-        self.locY = randint(0,9)
+        self.locX = 0
+        self.locY = 0
         self.stepCount = 0
+        self.adj=[]
 #:::::Getters and Setters:::::
     def setName (self,name): #set method for name
         self.name = name
@@ -52,5 +55,40 @@ class Agent: #comment
         self.locX += self.speed
         self.stepCount += 1
         log("to "+str(self.locX)+", "+str(self.locY)+")")
+#:::::Sensors::::::
+    def isWall(self,env,x,y):
+        if env.grid[x][y]==3 :
+            return True
+        else:
+            return False
+#    def canMove(self,env):
+        
 #:::::algorithms:::::
-def aStar(self,dungeon):
+#    def aStar(self,dungeon): 
+def DFS(self,env):
+
+class Node(self,env):
+    def __init__(x,y,v):
+        self.x = x
+        self.y = y
+        self.v = False
+        self.child1 = Null
+        self.child2 = null
+        self.child3
+    def visit(self):
+        self.v = True
+#def aStar(self,env):
+    #make tree starting from start
+
+    #q = queue.PriorityQueue(0)
+    #expand first in pq line
+    #x = self.getlocX()
+    #y = self.getlocY()
+    #mtx = makeAdjMatrix(self,env)
+    #cost = sqrt(pow((6-x),2)+(pow((6-y),2)))
+
+    #while Node != g
+        #if
+
+def makeAdjList(self,env):
+
