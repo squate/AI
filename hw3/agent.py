@@ -52,3 +52,5 @@ class Agent: #comment
         self.locX += self.speed
         self.stepCount += 1
         log("to "+str(self.locX)+", "+str(self.locY)+")")
+#:::::algorithms:::::
+def aStar(self,dungeon):
