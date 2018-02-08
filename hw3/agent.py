@@ -1,17 +1,18 @@
-#!~/usr/bin/python3
+#!/usr/bin/python3
 #Nate Levy, Alan Sato, SCI326 hw2
 from random import randint
 from envi import *
 import math
-import queue
-DEBUG = False
+
+
+#DEBUG = False
 #:::::logger:::::
-def log(s):
-    if DEBUG == True:
-        print(s)
-def log2(s,e):
-    if DEBUG == True:
-        print(s,end = e)
+#def log(s):
+#    if DEBUG == True:
+#        print(s)
+#def log2(s,e):
+#    if DEBUG == True:
+#        print(s,end = e)
 
 class Agent: #comment
 #:::::Initialize the Agent with Variables:::::
@@ -61,34 +62,23 @@ class Agent: #comment
             return True
         else:
             return False
-#    def canMove(self,env):
+    def canMove(self,env):
+        self.adj=[]
+        if self.y-1<env.sidelength:
+            if env.grid[self.x][self.y-1]!=3:
+                self.adj.append("D")
+        if self.x+1<env.sidelength:
+            if env.grid[self.x+1][self.y]!=3:
+                self.adj.append("R")
+        if self.x-1<env.sidelength:
+            if env.grid[self.x-1][self.y]!=3:
+                self.adj.append("L") 
+        if self.y+1<env.sidelength:
+            if env.grid[self.x][self.y+1]!=3:
+                self.adj.append("up")
+
+                 
         
 #:::::algorithms:::::
 #    def aStar(self,dungeon): 
-def DFS(self,env):
-
-class Node(self,env):
-    def __init__(x,y,v):
-        self.x = x
-        self.y = y
-        self.v = False
-        self.child1 = Null
-        self.child2 = null
-        self.child3
-    def visit(self):
-        self.v = True
-#def aStar(self,env):
-    #make tree starting from start
-
-    #q = queue.PriorityQueue(0)
-    #expand first in pq line
-    #x = self.getlocX()
-    #y = self.getlocY()
-    #mtx = makeAdjMatrix(self,env)
-    #cost = sqrt(pow((6-x),2)+(pow((6-y),2)))
-
-    #while Node != g
-        #if
-
-def makeAdjList(self,env):
 
