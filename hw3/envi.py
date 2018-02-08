@@ -1,5 +1,5 @@
-#Nate Levy, Alan Sato, SCI326 hw2
 #! /usr/bin/python3
+#Nate Levy, Alan Sato, SCI326 hw2
 # need to properly print grid, add roomba to display maybe
 from random import randint
 from array import array
@@ -17,7 +17,6 @@ class envi:
         self.grid[self.sidelength-1][self.sidelength-1] = 3
         self.grid[0][0] = 8
         self.walls = 7
-
     def setSideLength(self,length):
         self.sidelength = length
     def getSideLength(self):
