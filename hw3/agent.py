@@ -91,7 +91,7 @@ class Square(object):
         x = xCoord
         y = yCoord
         name = str(x)+" "+str(y)
-        r = Square(length, x+1, y) if ((x < (n-1))&&(env.squareNum(x+1,y)!=3)) else False
-        u = Square(length, x, y+1) if ((y < (n-1))&&(env.squareNum(x,y+1)!=3)) else False
-        l = Square(length, x-1, y) if ((x < 0)&&(env.squareNum(x-1,y)!=3)) else False
-        u = Square(length, x, y+1) if ((y < 0)&&(env.squareNum(x,y-1)!=3)) else False
+        r = Square(length, x+1, y) if ((x < (n-1))&&(env.squareNum(x+1, y) !=3 )) else False
+        u = Square(length, x, y+1) if ((y < (n-1))&&(env.squareNum(x, y+1) !=3 )) else False
+        l = Square(length, x-1, y) if ((x < 0)&&(env.squareNum(x-1, y) != 3)) else False
+        d = Square(length, x, y-1) if ((y < 0)&&(env.squareNum(x, y-1) != 3)) else False
