@@ -15,4 +15,7 @@ from agent import *
 def main():
     dungeon = envi(6)
     dungeon.addWalls()
-    dungeon.showgrid()
+    bruce = Agent()
+    dungeon.showgrid(bruce)
+    dungeon.showedges()
+main()
