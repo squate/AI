@@ -40,7 +40,7 @@ class envi:
         #acct for walls
         for i in range(n):
             for j in range(n):
-                if self.nodes[i][j]== 3:
+                if self.nodes[i][j]== 1:
                     index = int(n*i+j)
                     for e in range(w):
                         edgesGraph[index][e] == 0
@@ -87,7 +87,7 @@ class envi:
         print("Showing Edges")
         for x in range(0,(self.sidelength * self.sidelength),1):
             gridline = ''.join(str(self.edges[x]))
-            print("Line{0}:{1}".format(x,gridline)) 
+            print("Line{0}:{1}".format(x,gridline))
     def evaluate(self,agent):
         t = self.sidelength * self.sidelength
         s = agent.getstepCount()
