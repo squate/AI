@@ -41,11 +41,11 @@ class envi:
         for i in range(n):
             for j in range(n):
                 if self.nodes[i][j]== 1:
-                    index = int(n*i+j)
+                    index = int(n*j+i)
                     for e in range(w):
-                        edgesGraph[index][e] == 0
+                        edgesGraph[index][e] = 0
                     for e in range(w):
-                        edgesGraph[e][index] == 0
+                        edgesGraph[e][index] = 0
         return edgesGraph
 
     def isAdjacent(self, spot1, spot2):
