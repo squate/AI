@@ -6,6 +6,8 @@ from array import array
 from agent import *
 import copy
 
+DEBUG = True
+
 def log(s):
     if DEBUG == True:
         print(s)
@@ -22,33 +24,33 @@ class envi:
 
     def makeEdges(self,n): #needed for costs with the A* function
         w = n*n
-        edges = [[0] * w for i in range(w)]
+        self.edges = [[0] * w for i in range(w)]
         #acct for adjancencies w/o walls
         for i in range(w):
             for j in range(w):
                 if i%n == 0:
-                    if (j == i+1||j==i+n||j==i-n):
-                        edges[i][j] = 1
+                    if (j == i+1 or j==i+n or j==i-n):
+                        self.edges[i][j] = 1
                 elif i%n == n-1:
-                    if (j == i-1||j==i+n||j==i-n):
-                        edges[i][j] = 1
+                    if (j == i-1 or j==i+n or j==i-n):
+                        self.edges[i][j] = 1
                 else:
-                    if (j == i-1||j == i+1||j == i+n||j == i-n):
-                        edges[i][j] = 1
+                    if (j == i-1 or j == i+1 or j == i+n or j == i-n):
+                        self.edges[i][j] = 1
         #acct for walls
         for i in range(n):
             for j in range(n):
-                if nodes[i][j]== 3:
-                    oof = n*nodes[i]+nodes[j]
+                if self.nodes[i][j]== 3:
+                    index = int(n*i+j)
                     for e in range(w):
-                        edges[oof][e] == 0
+                        self.edges[index][e] == 0
                     for e in range(w):
-                        edges[e][oof] == 0
+                        self.edges[e][index] == 0
 
     def isAdjacent(self, spot1, spot2):
-        if edges[spot1][spot2] == 1:
+        if self.edges[spot1][spot2] == 1:
             return True
-        elif edges[spot1][spot2] == 0:
+        elif self.edges[spot1][spot2] == 0:
             return False
 
     def setSideLength(self,length):
@@ -65,10 +67,11 @@ class envi:
     def addWalls(self):
         wallnum = 0
         while wallnum < self.walls:
-            temp = self.nodes[randint(0,self.sidelength)][randint(0,self.sidelength)]
-
+            x = randint(0, self.sidelength-1)
+            y = randint(0, self.sidelength-1)
+            temp = self.nodes[x][y]
             if temp == 0:
-                temp = 1
+                self.nodes[x][y] = 1
                 wallnum += 1
 
 
