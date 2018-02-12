@@ -6,11 +6,11 @@ from array import array
 from agent import *
 import copy
 
-DEBUG = True
+#DEBUG = True
 
-def log(s):
-    if DEBUG == True:
-        print(s)
+#def log(s):
+#    if DEBUG == True:
+#        print(s)
 
 class envi:
     def __init__(self,n):
@@ -24,28 +24,29 @@ class envi:
 
     def makeEdges(self,n): #needed for costs with the A* function
         w = n*n
-        self.edges = [[0] * w for i in range(w)]
+        edgesGraph = [[0] * w for i in range(w)]
         #acct for adjancencies w/o walls
         for i in range(w):
             for j in range(w):
                 if i%n == 0:
                     if (j == i+1 or j==i+n or j==i-n):
-                        self.edges[i][j] = 1
+                        edgesGraph[i][j] = 1
                 elif i%n == n-1:
                     if (j == i-1 or j==i+n or j==i-n):
-                        self.edges[i][j] = 1
+                        edgesGraph[i][j] = 1
                 else:
                     if (j == i-1 or j == i+1 or j == i+n or j == i-n):
-                        self.edges[i][j] = 1
+                        edgesGraph[i][j] = 1
         #acct for walls
         for i in range(n):
             for j in range(n):
                 if self.nodes[i][j]== 3:
                     index = int(n*i+j)
                     for e in range(w):
-                        self.edges[index][e] == 0
+                        edgesGraph[index][e] == 0
                     for e in range(w):
-                        self.edges[e][index] == 0
+                        edgesGraph[e][index] == 0
+        return edgesGraph
 
     def isAdjacent(self, spot1, spot2):
         if self.edges[spot1][spot2] == 1:
@@ -78,10 +79,15 @@ class envi:
     def showgrid(self, agent): #visual representation of the evironment. 1 represents a space that is dirty, 0 represents not so.
         grid2 = copy.deepcopy(self.nodes) #we looked this up because w/o, this messes up the counting due to how lists are
         grid2[agent.getlocX()][agent.getlocY()] = 2
-        for x in range((self.sidelength-1),-1,-1):
+        print("Showing Grid")
+        for x in range(0,self.sidelength,1):
             gridline = ''.join(str(grid2[x]))
-            log(gridline)
-
+            print("Line{0}:{1}".format(x,gridline))
+    def showedges(self):
+        print("Showing Edges")
+        for x in range(0,(self.sidelength * self.sidelength),1):
+            gridline = ''.join(str(self.edges[x]))
+            print("Line{0}:{1}".format(x,gridline)) 
     def evaluate(self,agent):
         t = self.sidelength * self.sidelength
         s = agent.getstepCount()
