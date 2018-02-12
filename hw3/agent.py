@@ -87,11 +87,11 @@ class Agent: #comment
 
 class Square(object):
     def __init__(self,n,env,xCoord,yCoord):
-        length = n
-        x = xCoord
-        y = yCoord
-        name = str(x)+" "+str(y)
-        r = Square(length, x+1, y) if ((x < (n-1))&&(env.squareNum(x+1, y) !=3 )) else False
-        u = Square(length, x, y+1) if ((y < (n-1))&&(env.squareNum(x, y+1) !=3 )) else False
-        l = Square(length, x-1, y) if ((x < 0)&&(env.squareNum(x-1, y) != 3)) else False
-        d = Square(length, x, y-1) if ((y < 0)&&(env.squareNum(x, y-1) != 3)) else False
+        self.length = n
+        self.x = xCoord
+        self.y = yCoord
+        self.name = (str(x),str(y))
+        self.r = Square(length, x+1, y) if ((x < (n-1)) && (env.squareNum(x+1, y) !=3 )) else None
+        self.u = Square(length, x, y+1) if ((y < (n-1)) && (env.squareNum(x, y+1) !=3 )) else None
+        self.l = Square(length, x-1, y) if ((x < 0) && (env.squareNum(x-1, y) != 3)) else None
+        self.d = Square(length, x, y-1) if ((y < 0) && (env.squareNum(x, y-1) != 3)) else None
