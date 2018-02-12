@@ -86,7 +86,12 @@ class Agent: #comment
 
 
 class Square(object):
-    def __init__(self,env,xCoord,yCoord):
-        w = self.sidelength
+    def __init__(self,n,env,xCoord,yCoord):
+        length = n
         x = xCoord
         y = yCoord
+        name = str(x)+" "+str(y)
+        r = Square(length, x+1, y) if ((x < (n-1))&&(env.squareNum(x+1,y)!=3)) else False
+        u = Square(length, x, y+1) if ((y < (n-1))&&(env.squareNum(x,y+1)!=3)) else False
+        l = Square(length, x-1, y) if ((x < 0)&&(env.squareNum(x-1,y)!=3)) else False
+        u = Square(length, x, y+1) if ((y < 0)&&(env.squareNum(x,y-1)!=3)) else False
