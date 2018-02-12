@@ -5,23 +5,26 @@ from envi import *
 import math
 
 
-#DEBUG = False
+DEBUG = True
 #:::::logger:::::
-#def log(s):
-#    if DEBUG == True:
-#        print(s)
-#def log2(s,e):
-#    if DEBUG == True:
-#        print(s,end = e)
+def log(s):
+    if DEBUG == True:
+        print(s)
+def log2(s,e):
+    if DEBUG == True:
+        print(s,end = e)
 
 class Agent: #comment
 #:::::Initialize the Agent with Variables:::::
     def __init__(self):
         self.name = "Bruce"
-        self.locX = 0
-        self.locY = 0
+        self.locX = 2
+        self.locY = 2
         self.stepCount = 0
-        self.adj=[]
+        self.square = 14
+        self.adj = []
+        self.queue = []
+        self.stack = []
 #:::::Getters and Setters:::::
     def setName (self,name): #set method for name
         self.name = name
@@ -35,49 +38,43 @@ class Agent: #comment
         return self.locY
     def getstepCount(self):
         return self.stepCount
+    def setSquare(self,env):
+        self.square = self.locX * env.getSideLength() + self.locY()
 #:::::movement up down left and right::::::
-    def moveUp(self):
+    def findCoords(self, env,square):
+        self.locX = square%env.getSideLength()
+        self.locY = (square - self.locX)/env.getSideLength()
+    def moveUp(self,env):
         log2("moving up from (" +str(self.locX)+", "+str(self.locY), " ")
         self.locY += self.speed
         self.stepCount += 1
+        self.setSquare(env)
         log("to "+str(self.locX)+", "+str(self.locY)+")")
-    def moveDown(self):
+    def moveDown(self,env):
         log2("moving down from (" +str(self.locX)+", "+str(self.locY), " ")
         self.locY -= self.speed
         self.stepCount += 1
+        self.setSquare(env)
         log("to "+str(self.locX)+", "+str(self.locY)+")")
-    def moveLeft(self):
+    def moveLeft(self,env):
         log2("moving left from (" +str(self.locX)+", "+str(self.locY), " ")
         self.locX -= self.speed
         self.stepCount += 1
+        self.setSquare(env)
         log("to "+ str(self.locX)+", "+str(self.locY)+")")
-    def moveRight(self):
+    def moveRight(self,env):
         log2("moving right from (" +str(self.locX)+", "+str(self.locY), " ")
         self.locX += self.speed
         self.stepCount += 1
+        self.setSquare(env)
         log("to "+str(self.locX)+", "+str(self.locY)+")")
 #:::::Sensors::::::
-    def isWall(self,env,x,y):
-        if env.grid[x][y]==3 :
-            return True
-        else:
-            return False
-    def canMove(self,env):
-        self.adj=[]
-        if self.y-1<env.sidelength:
-            if env.grid[self.x][self.y-1]!=3:
-                self.adj.append("D")
-        if self.x+1<env.sidelength:
-            if env.grid[self.x+1][self.y]!=3:
-                self.adj.append("R")
-        if self.x-1<env.sidelength:
-            if env.grid[self.x-1][self.y]!=3:
-                self.adj.append("L")
-        if self.y+1<env.sidelength:
-            if env.grid[self.x][self.y+1]!=3:
-                self.adj.append("U")
+    def getAdjacencies(self,env):
+        self.adj = []
+        square = self.locX * env.getSideLength() + self.locY
+        for i in range(0,env.getSideLength()*env.getSideLength()):
+            if env.edges[square][i] == 1:
+                self.adj.append(i)
+                log(i)
 
 #:::::algorithms:::::
-#    def aStar(self,dungeon):
-    def BFS(self, e):
-        self.canMove(e)
