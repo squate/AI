@@ -72,13 +72,21 @@ class Agent: #comment
                 self.adj.append("R")
         if self.x-1<env.sidelength:
             if env.grid[self.x-1][self.y]!=3:
-                self.adj.append("L") 
+                self.adj.append("L")
         if self.y+1<env.sidelength:
             if env.grid[self.x][self.y+1]!=3:
-                self.adj.append("up")
+                self.adj.append("U")
 
-                 
-        
+
+
 #:::::algorithms:::::
-#    def aStar(self,dungeon): 
+#    def aStar(self,dungeon):
+    def BFS(self, e):
+        self.canMove(e)
 
+
+class Square(object):
+    def __init__(self,env,xCoord,yCoord):
+        w = self.sidelength
+        x = xCoord
+        y = yCoord
