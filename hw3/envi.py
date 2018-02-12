@@ -82,12 +82,12 @@ class envi:
         print("Showing Grid")
         for x in range(0,self.sidelength,1):
             gridline = ''.join(str(grid2[x]))
-            print("Line{0}:{1}".format(x,gridline))
+            print("x={0}:{1}".format(x,gridline))
     def showedges(self):
         print("Showing Edges")
         for x in range(0,(self.sidelength * self.sidelength),1):
             gridline = ''.join(str(self.edges[x]))
-            print("Line{:2}:{:1}".format(x,gridline))
+            print("Square{:2}:{:1}".format(x,gridline))
     def evaluate(self,agent):
         t = self.sidelength * self.sidelength
         s = agent.getstepCount()
