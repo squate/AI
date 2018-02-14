@@ -18,4 +18,6 @@ def main():
     bruce = Agent()
     dungeon.showgrid(bruce)
     dungeon.showedges()
+    bruce.DFS(dungeon)
+    dungeon.showgrid(bruce)
 main()
