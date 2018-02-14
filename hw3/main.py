@@ -17,7 +17,10 @@ def main():
     dungeon.addWalls()
     bruce = Agent()
     dungeon.showgrid(bruce)
-    dungeon.showedges()
-    bruce.DFS(dungeon)
-    dungeon.showgrid(bruce)
+#    bruce.findHyoo(dungeon,0,0) Testing to see if Heuristic value works
+#    bruce.findHyoo(dungeon,1,0)
+#    bruce.findHyoo(dungeon,0,1)
+#    dungeon.showedges()
+#    bruce.DFS(dungeon)
+#    dungeon.showgrid(bruce)
 main()
