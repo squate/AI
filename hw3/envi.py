@@ -17,7 +17,6 @@ class envi:
         self.sidelength = n
         self.nodes = [[0] * self.sidelength for i in range(self.sidelength)]
         self.nodes[self.sidelength-1][self.sidelength-1] = 3
-        self.nodes[0][0] = 8
         self.walls = 7
         self.addWalls()
         self.edges = self.makeEdges(self.sidelength)
@@ -60,10 +59,10 @@ class envi:
         return self.sidelength
 
     def visit(self,x,y):
-        self.grid[x][y] = 2
+        self.nodes[x][y] = 2
 
     def squareNum(self,x,y):
-        return grid[x][y]
+        return nodes[x][y]
 
     def addWalls(self):
         wallnum = 0
@@ -78,7 +77,7 @@ class envi:
 
     def showgrid(self, agent): #visual representation of the evironment. 1 represents a space that is dirty, 0 represents not so.
         grid2 = copy.deepcopy(self.nodes) #we looked this up because w/o, this messes up the counting due to how lists are
-        grid2[agent.getlocX()][agent.getlocY()] = 2
+        grid2[agent.getlocX()][agent.getlocY()] = 8
         print("Showing Grid")
         for x in range(0,self.sidelength,1):
             gridline = ''.join(str(grid2[x]))
