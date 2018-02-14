@@ -87,8 +87,16 @@ class Agent: #comment
         for i in range(0,env.getSideLength()*env.getSideLength()):
             if env.edges[square][i] == 1:
                 neighbors.append(i)
-                log(i)
+                #log(i)
         return neighbors
+#Find Heuristic Value of each square using Distance formula
+    def findHyoo(self,env,x,y):
+        goalx = env.getSideLength()-1
+        goaly = env.getSideLength()-1
+        #distance formula
+        d = ((((goalx-x)**2) + ((goaly-y)**2))**(1/2.0))
+        #print("distance from {0}{1} to goal is {2}".format(x,y,d))
+        return d
 #:::::algorithms:::::
     def DFS(self,env):
         #set visited to false for errything
@@ -114,4 +122,6 @@ class Agent: #comment
                 env.visit(x,y)
                 for i in range(0,len(n)):
                     if n[i] not in self.visited:
+                        print("n{0} is {1}, which is not in list {2}".format(i,n[i],self.visited))
                         self.stack.append(n[i])
+
