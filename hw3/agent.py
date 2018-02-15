@@ -80,6 +80,8 @@ class Agent: #comment
         for i in range(0,env.getSideLength()*env.getSideLength()):
             if env.edges[square][i] == 1:
                 self.adj.append(i)
+                if self.squareToNode(env,i) == 1:
+                    print("this neighbor is a wall")
                 #log(i)
         return self.adj
     def expand(self,env,sqr):
@@ -88,6 +90,8 @@ class Agent: #comment
         for i in range(0,env.getSideLength()*env.getSideLength()):
             if env.edges[square][i] == 1:
                 neighbors.append(i)
+                if self.squareToNode(env,i) == 1:
+                    print("adding a neighbor that is a wall")
                 #log(i)
         return neighbors
 #Find Heuristic Value of each square using Distance formula
@@ -129,14 +133,20 @@ class Agent: #comment
         #reset flag and queue
         foundPath = False
         self.queue = []
-        self.visited = [self.square]
+        self.visited = [0]
         self.queue += self.getAdjacencies(env)
         while (len(self.queue) > 0) and foundPath == False:
             parent = self.queue.pop(0);
             print("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) ==3:
                 print("found path to goal")
-                return parent
-            for item in self.queue:
+                return True
+            for item in self.expand(env,parent):
                 if item in self.visited:
                     continue
+                if item not in self.queue:
+                    self.queue.append(item)
+                    if self.squareToNode(env,parent) ==1:
+                        print("about to add an item, taken from expand that is a wall")
+                    print("added Square:{0}: to Queue, Queue is now {1}".format(item,self.queue))
+            self.visited.append(parent) 
