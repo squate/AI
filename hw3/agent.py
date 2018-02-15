@@ -80,7 +80,8 @@ class Agent: #comment
         for i in range(0,env.getSideLength()*env.getSideLength()):
             if env.edges[square][i] == 1:
                 self.adj.append(i)
-                log(i)
+                #log(i)
+        return self.adj
     def expand(self,env,sqr):
         neighbors = []
         square = sqr
@@ -124,4 +125,18 @@ class Agent: #comment
                     if n[i] not in self.visited:
                         print("n{0} is {1}, which is not in list {2}".format(i,n[i],self.visited))
                         self.stack.append(n[i])
-
+    def BFS(self,env):
+        #reset flag and queue
+        foundPath = False
+        self.queue = []
+        self.visited = [self.square]
+        self.queue += self.getAdjacencies(env)
+        while (len(self.queue) > 0) and foundPath == False:
+            parent = self.queue.pop(0);
+            print("Parent = {0}".format(parent))
+            if self.squareToNode(env,parent) ==3:
+                print("found path to goal")
+                return parent
+            for item in self.queue:
+                if item in self.visited:
+                    continue
