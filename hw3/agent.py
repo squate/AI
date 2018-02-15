@@ -24,6 +24,7 @@ class Agent: #comment
         self.queue = []
         self.stack = []
         self.visited = []
+        self.history = []
 #:::::Getters and Setters:::::
     def setName (self,name): #set method for name
         self.name = name
@@ -35,6 +36,8 @@ class Agent: #comment
         return self.locX
     def getlocY(self):
         return self.locY
+    def getHistory(self):
+        return self.history
     def getstepCount(self):
         return self.stepCount
     def setSquare(self,env):
@@ -93,6 +96,21 @@ class Agent: #comment
                     neighbors.append(i)
                 #log(i)
         return neighbors
+
+    def makePath(self):
+        path = []
+        start = self.history[0]
+        u = self.history.pop()
+        path = []
+        end = u[0]
+        path.append(end)
+        path.append(u[1])
+        while end != start:
+            for i in range(len(self.history)):
+                if history[i][1] == end:
+                    end = self.history[i][0]
+                    path.insert(end,0)
+
 #Find Heuristic Value of each square using Distance formula
     def findHyoo(self,env,x,y):
         goalx = env.getSideLength()-1
@@ -130,12 +148,15 @@ class Agent: #comment
                         self.stack.append(n[i])
     def BFS(self,env):
         #reset flag and queue
-        foundPath = False
+        self.history = []
         self.queue = []
         self.visited = [0]
         self.queue += self.getAdjacencies(env)
-        while (len(self.queue) > 0) and foundPath == False:
+        start = 0
+        while len(self.queue) > 0:
             parent = self.queue.pop(0);
+            end = parent
+            self.history.append((start,end))
             print("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) ==3:
                 print("found path to goal")
@@ -148,4 +169,6 @@ class Agent: #comment
                     if self.squareToNode(env,parent) ==1:
                         print("about to add an item, taken from expand that is a wall")
                     print("added Square:{0}: to Queue, Queue is now {1}".format(item,self.queue))
-            self.visited.append(parent) 
+            self.visited.append(parent)
+            start = parent
+            return self.makePath
