@@ -20,10 +20,11 @@ class Agent: #comment
         self.locY = 0
         self.stepCount = 0
         #self.square = 0
-        self.adj = []
+        #self.adj = []
         self.queue = []
         self.stack = []
         self.visited = []
+        self.history = []
 #:::::Getters and Setters:::::
     def setName (self,name): #set method for name
         self.name = name
@@ -75,15 +76,13 @@ class Agent: #comment
         log("to "+str(self.locX)+", "+str(self.locY)+")")
 #:::::Sensors::::::
     def getAdjacencies(self,env):
-        self.adj = []
+        adjacent = []
         square = self.locX * env.getSideLength() + self.locY
         for i in range(0,env.getSideLength()*env.getSideLength()):
             if env.edges[square][i] == 1:
-                self.adj.append(i)
-                if self.squareToNode(env,i) == 1:
-                    print("this neighbor is a wall")
-                #log(i)
-        return self.adj
+                if self.squareToNode(env,i) != 1:
+                    adjacent.append(i)
+        return adjacent
     def expand(self,env,sqr):
         neighbors = []
         square = sqr
