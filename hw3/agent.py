@@ -89,9 +89,8 @@ class Agent: #comment
         square = sqr
         for i in range(0,env.getSideLength()*env.getSideLength()):
             if env.edges[square][i] == 1:
-                neighbors.append(i)
-                if self.squareToNode(env,i) == 1:
-                    print("adding a neighbor that is a wall")
+                if self.squareToNode(env,i) != 1:
+                    neighbors.append(i)
                 #log(i)
         return neighbors
 #Find Heuristic Value of each square using Distance formula
