@@ -164,25 +164,25 @@ class Agent: #comment
                     print("added Square:{0}: to Queue, Queue is now {1}".format(item,self.queue))
             self.visited.append(parent)
     def UCS(self,env):
-        self.queue = [[[0,],0]]
+        self.queue = [[0,[0,]]]
         self.visited =[]
         while (len(self.queue) > 0):
             print("current Queue {0}".format(self.queue))
             parent = self.queue.pop(0)
             print("parent is {0}".format(parent))
-            print("parent[0] is {0}".format(parent[0]))
-            if self.squareToNode(env,parent[0][len(parent[0])-1])==3:
-                print("this is the path? {0}".format(parent[0][len(parent[0]-1)]))
+            print("parent[1] is {0}".format(parent[1]))
+            if self.squareToNode(env,parent[1][len(parent[1])-1])==3:
+                print("this is the path? {0}".format(parent[1]))
                 return parent
-            for child in self.expand(env,parent[0][len(parent[0])-1]):
+            for child in self.expand(env,parent[1][len(parent[1])-1]):
                 if child in self.visited:
                     continue
-                if child not in parent[0]:
+                if child not in parent[1]:
                     print("adding Child:{0}: to parent".format(child))
-                    temp = [(parent[0] + [child]),parent[1]+1]
+                    temp = [parent[0]+1,(parent[1] + [child])]
                     print(" About to add temp = {0} to queue".format(temp))
                     self.queue.append(temp)
-                    self.queue.sort(reverse = true)
+                    self.queue.sort()
                     print("element added is :{0}".format(temp))
             self.visited.append(parent) 
         return
