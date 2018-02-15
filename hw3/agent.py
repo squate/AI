@@ -117,24 +117,26 @@ class Agent: #comment
                 if item[1] == temp[0][0]:
                     temp.insert(0,item)
         print("this is the trimmed path{0}".format(temp))
-        return
+        return temp
 #:::::Search Algorithms:::::
     def DFS(self,env):
         #reset stack
-        self.stack = []
-        self.visited = [self.nodeToSquare(env,0,0)]
-        self.stack += self.getAdjacencies(env) #push onto stack the squares that you can move to from origin
+        self.stack = [0]
+        self.visited = []
+#        self.stack += self.getAdjacencies(env) #push onto stack the squares that you can move to from origin
         while (len(self.stack) > 0):
             parent = self.stack.pop();
             print("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) ==3:
                 print("found path to goal")
+                self.trimPath(env)
                 return True
             for item in self.expand(env,parent):
                 if item in self.visited:
                     continue
                 if item not in self.stack:
                     self.stack.append(item)
+                    self.pathRecord.append((parent,item))
                     #if self.squareToNode(env,item) ==1:
                     #    print("about to add an item, taken from expand that is a wall")
                     print("added Square:{0}: to stack, stack is now {1}".format(item,self.stack))
