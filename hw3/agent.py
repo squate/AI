@@ -50,9 +50,10 @@ class Agent: #Initialize the Agent with Variables
     def getFinalPath(self):
         return self.finalPath
 #:::::movement up down left and right::::::
-    def findCoords(self, env,square):
-        self.locX = square%env.getSideLength()
-        self.locY = (square - self.locX)/env.getSideLength()
+    def squareToCoords(self, env, square):
+        x = square%env.getSideLength()
+        y = (square - y)/env.getSideLength()
+        return (x,y)
     def moveUp(self,env):
         log2("moving up from (" +str(self.locX)+", "+str(self.locY), " ")
         self.locY += self.speed
@@ -110,7 +111,19 @@ class Agent: #Initialize the Agent with Variables
                     temp.insert(0,item)
         log("this is the trimmed path{0}".format(temp))
         return temp
-    #def followPath(self,env):
+    def followPath(self,env):
+        for i in range(len(self.finalPath)):
+            xy0 = findCoords(env,self.squareToCoords(env,self.finalPath[i][0]))
+            xy1 = findCoords(env,self.squareToCoords(env,self.finalPath[i][1]))
+            x0, y0, x1, y1 = xy0[0], xy0[1], xy1[0], xy1[1]
+            if (x0>x1):
+                self.moveRight(env)
+            elif (x0>x1):
+                self.moveLeft(env)
+            elif (y0>y1):
+                self.moveDown(env)
+            elif (y0<y1):
+                self.moveUp(env)
 
 #:::::Search Algorithms:::::
     def DFS(self,env):
