@@ -102,39 +102,33 @@ class Agent: #comment
         #print("distance from {0}{1} to goal is {2}".format(x,y,d))
         return d
 #:::::algorithms:::::
+
     def DFS(self,env):
-        #set visited to false for errything
-        foundPath = False
-        self.getAdjacencies(env)
-        self.visited = []
-        for i in range(0,len(self.adj)):
-            self.stack.append(self.adj[i])
-        while (len(self.stack) > 0) and foundPath == False:
-            u = self.stack.pop();
-            if self.squareToNode(env,u) == 3:
-                print("found " + str(u))
-                return u
-            if u in self.visited:
-                beenToU = True
-            else:
-                beenToU = False
-            if beenToU == False:
-                n = self.expand(env, u)
-                self.visited.append(n)
-                x = int(u%env.getSideLength())
-                y = int((u-x)/env.getSideLength())
-                env.visit(x,y)
-                for i in range(0,len(n)):
-                    if n[i] not in self.visited:
-                        print("n{0} is {1}, which is not in list {2}".format(i,n[i],self.visited))
-                        self.stack.append(n[i])
+        #reset stack
+        self.stack = []
+        self.visited = [0]
+        self.stack += self.getAdjacencies(env)
+        while (len(self.stack) > 0):
+            parent = self.stack.pop();
+            print("Parent = {0}".format(parent))
+            if self.squareToNode(env,parent) ==3:
+                print("found path to goal")
+                return True
+            for item in self.expand(env,parent):
+                if item in self.visited:
+                    continue
+                if item not in self.stack:
+                    self.stack.append(item)
+                    if self.squareToNode(env,item) ==1:
+                        print("about to add an item, taken from expand that is a wall")
+                    print("added Square:{0}: to stack, stack is now {1}".format(item,self.stack))
+            self.visited.append(parent) 
     def BFS(self,env):
-        #reset flag and queue
-        foundPath = False
+        #reset queue
         self.queue = []
         self.visited = [0]
         self.queue += self.getAdjacencies(env)
-        while (len(self.queue) > 0) and foundPath == False:
+        while (len(self.queue) > 0):
             parent = self.queue.pop(0);
             print("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) ==3:
@@ -145,7 +139,7 @@ class Agent: #comment
                     continue
                 if item not in self.queue:
                     self.queue.append(item)
-                    if self.squareToNode(env,parent) ==1:
+                    if self.squareToNode(env,item) ==1:
                         print("about to add an item, taken from expand that is a wall")
                     print("added Square:{0}: to Queue, Queue is now {1}".format(item,self.queue))
             self.visited.append(parent) 
