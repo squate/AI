@@ -6,7 +6,7 @@ from array import array
 from agent import *
 import copy
 
-DEBUG = True
+DEBUG = False
 
 def log(s):
     if DEBUG == True:
@@ -49,6 +49,7 @@ class envi:
                         edgesGraph[e][index] = 0
         return edgesGraph
     def visit(self,x,y):
+        log("visiting{0},{1}".format(x,y))
         self.nodes[x][y] = 2
     def addWalls(self):
         wallnum = 0
