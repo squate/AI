@@ -52,25 +52,31 @@ class Agent: #Initialize the Agent with Variables
         return env.nodes[x][y]
 #:::::movement (up, down, left and right):::::
     def moveUp(self,env):
+        self.visit(env)
         log2("Moving UP        (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locY += 1
         self.stepCount += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
     def moveDown(self,env):
+        self.visit(env)
         log2("Moving DOWN      (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locY -= 1
         self.stepCount += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
     def moveLeft(self,env):
+        self.visit(env)
         log2("Moving LEFT      (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locX -= 1
         self.stepCount += 1
         log("--> ("+ str(self.locX)+", "+str(self.locY)+")")
     def moveRight(self,env):
+        self.visit(env)
         log2("Moving RIGHT     (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locX += 1
         self.stepCount += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
+    def visit(self,env):
+        env.visit(self.locX,self.locY)
 #:::::Sensors::::::
     def expand(self,env,sqr):
         neighbors = []
