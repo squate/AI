@@ -37,8 +37,6 @@ class Agent: #Initialize the Agent with Variables
         return self.locY
     def getstepCount(self):
         return self.stepCount
-    def setSquare(self,env):
-        self.square = self.locX * env.getSideLength() + self.locY()
     def nodeToSquare(self,env,x,y):
         return x * env.getSideLength() + y
     def squareToNode(self,env,sqr):
@@ -50,33 +48,25 @@ class Agent: #Initialize the Agent with Variables
     def getFinalPath(self):
         return self.finalPath
 #:::::movement up down left and right::::::
-    def squareToCoords(self, env, square):
-        x = square%env.getSideLength()
-        y = (square - y)/env.getSideLength()
-        return (x,y)
     def moveUp(self,env):
         log2("moving up from (" +str(self.locX)+", "+str(self.locY), " ")
-        self.locY += self.speed
+        self.locY += 1
         self.stepCount += 1
-        self.setSquare(env)
         log("to "+str(self.locX)+", "+str(self.locY)+")")
     def moveDown(self,env):
         log2("moving down from (" +str(self.locX)+", "+str(self.locY), " ")
-        self.locY -= self.speed
+        self.locY -= 1
         self.stepCount += 1
-        self.setSquare(env)
         log("to "+str(self.locX)+", "+str(self.locY)+")")
     def moveLeft(self,env):
         log2("moving left from (" +str(self.locX)+", "+str(self.locY), " ")
-        self.locX -= self.speed
+        self.locX -= 1
         self.stepCount += 1
-        self.setSquare(env)
         log("to "+ str(self.locX)+", "+str(self.locY)+")")
     def moveRight(self,env):
         log2("moving right from (" +str(self.locX)+", "+str(self.locY), " ")
-        self.locX += self.speed
+        self.locX += 1
         self.stepCount += 1
-        self.setSquare(env)
         log("to "+str(self.locX)+", "+str(self.locY)+")")
 #:::::Sensors::::::
     def expand(self,env,sqr):
@@ -97,6 +87,10 @@ class Agent: #Initialize the Agent with Variables
         d = ((((goalx-x)**2) + ((goaly-y)**2))**(1/2.0))
         #print("distance from {0}{1} to goal is {2}".format(x,y,d))
         return d
+    def squareToCoords(self, env, square):
+        x = int(square%env.getSideLength())
+        y = int((square - x)/env.getSideLength())
+        return (x,y)
 #:::::path-related functions:::::
     def trimPath(self,env):
         temp = []
@@ -113,17 +107,21 @@ class Agent: #Initialize the Agent with Variables
         return temp
     def followPath(self,env):
         for i in range(len(self.finalPath)):
-            xy0 = findCoords(env,self.squareToCoords(env,self.finalPath[i][0]))
-            xy1 = findCoords(env,self.squareToCoords(env,self.finalPath[i][1]))
-            x0, y0, x1, y1 = xy0[0], xy0[1], xy1[0], xy1[1]
-            if (x0>x1):
-                self.moveRight(env)
-            elif (x0>x1):
-                self.moveLeft(env)
-            elif (y0>y1):
-                self.moveDown(env)
-            elif (y0<y1):
-                self.moveUp(env)
+            xy0 = self.squareToCoords(env,self.finalPath[i][0])
+            xy1 = self.squareToCoords(env,self.finalPath[i][1])
+            x0, y0, x1, y1 = int(xy0[0]), int(xy0[1]), int(xy1[0]), int(xy1[1])
+            log("(x0, y0): {0}".format(xy0))
+            log("(x1, y1): {0}".format(xy1))
+            if (x1 == x0):
+                if (y1 > y0):
+                    self.moveUp(env)
+                else:
+                    self.moveDown(env)
+            else:
+                if (x1 > x0):
+                    self.moveRight(env)
+                else:
+                    self.moveLeft(env)
 
 #:::::Search Algorithms:::::
     def DFS(self,env):
