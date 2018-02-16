@@ -11,16 +11,17 @@ def log(s):
 def log2(s,e):
     if DEBUG == True:
         print(s,end = e)
-
 def main():
     dungeon = envi(6)
-    dungeon.addWalls()
     bruce = Agent()
     dungeon.showgrid(bruce)
 #    bruce.findHyoo(dungeon,0,0) Testing to see if Heuristic value works
 #    bruce.findHyoo(dungeon,1,0)
 #    bruce.findHyoo(dungeon,0,1)
-    bruce.DFS(dungeon)
+    bruce.BFS(dungeon)
     log("final path:{0}".format(bruce.getFinalPath()))
-
+    log("Following:")
+    bruce.followPath(dungeon)
+    log("steps: " + str(bruce.getstepCount()))
+    dungeon.showgrid(bruce)
 main()
