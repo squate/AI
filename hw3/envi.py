@@ -6,12 +6,12 @@ from array import array
 from agent import *
 import copy
 
-#DEBUG = True
+DEBUG = True
 
-#def log(s):
-#    if DEBUG == True:
-#        print(s)
-
+def log(s):
+    if DEBUG == True:
+        print(s)
+#:::::constructor:::::
 class envi:
     def __init__(self,n):
         self.sidelength = n
@@ -20,12 +20,15 @@ class envi:
         self.walls = 7
         self.addWalls()
         self.edges = self.makeEdges(self.sidelength)
-
-    def makeEdges(self,n): #needed for costs with the A* function
+#:::::setters and getters:::::
+    def setSideLength(self,length):
+        self.sidelength = length
+    def getSideLength(self):
+        return self.sidelength
+    def makeEdges(self,n): #create adjacency matrix from nodes[][]
         w = n*n
         edgesGraph = [[0] * w for i in range(w)]
-        #acct for adjancencies w/o walls
-        for i in range(w):
+        for i in range(w): #set all possible adjacencies to 1 in matrix
             for j in range(w):
                 if i%n == 0:
                     if (j == i+1 or j==i+n or j==i-n):
@@ -36,8 +39,7 @@ class envi:
                 else:
                     if (j == i-1 or j == i+1 or j == i+n or j == i-n):
                         edgesGraph[i][j] = 1
-        #acct for walls
-        for i in range(n):
+        for i in range(n): #change connections involving walls to 0 in matrix
             for j in range(n):
                 if self.nodes[i][j]== 1:
                     index = int(n*j+i)
@@ -46,24 +48,8 @@ class envi:
                     for e in range(w):
                         edgesGraph[e][index] = 0
         return edgesGraph
-
-    def isAdjacent(self, spot1, spot2):
-        if self.edges[spot1][spot2] == 1:
-            return True
-        elif self.edges[spot1][spot2] == 0:
-            return False
-
-    def setSideLength(self,length):
-        self.sidelength = length
-    def getSideLength(self):
-        return self.sidelength
-
     def visit(self,x,y):
         self.nodes[x][y] = 2
-
-    def squareNum(self,x,y):
-        return nodes[x][y]
-
     def addWalls(self):
         wallnum = 0
         while wallnum < self.walls:
@@ -73,8 +59,6 @@ class envi:
             if temp == 0:
                 self.nodes[x][y] = 1
                 wallnum += 1
-
-
     def showgrid(self, agent): #visual representation of the evironment. 1 represents a space that is dirty, 0 represents not so.
         grid2 = copy.deepcopy(self.nodes) #we looked this up because w/o, this messes up the counting due to how lists are
         grid2[agent.getlocX()][agent.getlocY()] = 8
