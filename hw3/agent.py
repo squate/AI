@@ -4,7 +4,7 @@ from random import randint
 from envi import *
 import math
 
-DEBUG = True
+DEBUG = False
 #:::::logger:::::
 def log(s):
     if DEBUG == True:
@@ -76,6 +76,7 @@ class Agent: #Initialize the Agent with Variables
         self.stepCount += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
     def visit(self,env):
+        log("visiting ({0}, {1})".format(self.locX,self.locY))
         env.visit(self.locX,self.locY)
 #:::::Sensors::::::
     def expand(self,env,sqr):
@@ -94,7 +95,7 @@ class Agent: #Initialize the Agent with Variables
         goaly = env.getSideLength()-1
         #distance formula
         d = ((((goalx-x)**2) + ((goaly-y)**2))**(1/2.0))
-        #print("distance from {0}{1} to goal is {2}".format(x,y,d))
+        log("distance from {0}{1} to goal is {2}".format(x,y,d))
         return d
 #:::::path-related functions:::::
     def trimPath(self,env):
@@ -111,6 +112,10 @@ class Agent: #Initialize the Agent with Variables
         log("this is the trimmed path{0}".format(temp))
         return temp
     def followPath(self,env):
+        self.locX = 0
+        self.locY = 0
+        self.stepCount = 0
+        log("following path:\n{0}".format(self.finalPath))
         for i in range(len(self.finalPath)):
             xy0 = self.squareToCoords(env,self.finalPath[i][0])
             xy1 = self.squareToCoords(env,self.finalPath[i][1])
@@ -123,9 +128,10 @@ class Agent: #Initialize the Agent with Variables
             else:
                 if (x1 > x0):
                     self.moveRight(env)
-                else:
+                elif(x1 < x0):
                     self.moveLeft(env)
-
+                else:
+                    return
 #:::::Search Algorithms:::::
     def DFS(self,env):
         #reset stack
@@ -135,7 +141,7 @@ class Agent: #Initialize the Agent with Variables
             parent = self.list.pop();
             log("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) ==3:
-                print("found path to goal")
+                log("found path to goal")
                 self.finalPath = self.trimPath(env)
                 return True
             for item in self.expand(env,parent):
@@ -153,9 +159,9 @@ class Agent: #Initialize the Agent with Variables
         self.pathRecord = [(0,0)]
         while (len(self.list) > 0):
             parent = self.list.pop(0)
-            print("Parent = {0}".format(parent))
+            log("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) ==3:
-                print("found path to goal")
+                log("found path to goal")
                 log("Path record holds:{0}".format(self.pathRecord))
                 self.finalPath = self.trimPath(env)
                 return True
@@ -169,7 +175,7 @@ class Agent: #Initialize the Agent with Variables
             self.visited.append(parent)
             start = parent
     def UCS(self,env):
-        self.list = [[0,[0,]]]
+        self.list = [0]
         self.visited =[]
         while (len(self.list) > 0):
             log("current Queue {0}".format(self.list))
@@ -179,6 +185,7 @@ class Agent: #Initialize the Agent with Variables
             if self.squareToNode(env,parent[1][len(parent[1])-1])==3:
                 log("this is the path? {0}".format(parent[1]))
                 self.finalPath = parent
+                print("{0}".format(self.finalPath))
                 return parent
             for child in self.expand(env,parent[1][len(parent[1])-1]):
                 if child in self.visited:
