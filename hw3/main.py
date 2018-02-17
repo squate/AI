@@ -23,18 +23,18 @@ def finalTest(agent,environment,reps):
     totalBFS = 0
     totalDFS = 0
     totalUCS = 0
-    totalGreed = 0
+    totalGreedy = 0
     totalFail = 0
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
         run = agent.BFS(dungeon)
         if run[0] == 1:
             totalBFS += run[1]
-        else:
+        elif run[0] == 0:
             totalFail += 1
     avg = totalBFS / (reps - totalFail)
-    print("Avg Steps/ successful run (BFS): {0}".format(avg))
-    print("Percent successful runs (BFS): {0}\n".format(reps-totalFail))
+    log("Avg Steps/ successful run (BFS): {0}".format(avg))
+    log("Percent successful runs (BFS): {0}\n".format((((reps-totalFail)/reps))*100))
     totalFail = 0
 
     for i in range(reps):
@@ -42,25 +42,24 @@ def finalTest(agent,environment,reps):
         run = agent.DFS(dungeon)
         if run[0] == 1:
             totalDFS += run[1]
-        else:
+        elif run[0] == 0:
             totalFail += 1
     avg = (totalDFS / (reps - totalFail))
-    print("Avg Steps/ successful run (DFS): {0}".format(avg))
-    print("Percent successful runs (DFS): {0} \n".format(reps-totalFail))
+    log("Avg Steps/ successful run (DFS): {0}".format(avg))
+    log("Percent successful runs (DFS): {0} \n".format((((reps-totalFail)/reps))*100))
     toalFail = 0
 
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
-        run = agent.greed(dungeon)
+        run = agent.greedy(dungeon)
         if run[0] == 1:
-            totalGreed += run[1]
-        else:
+            totalGreedy += run[1]
+        elif run[0] == 0:
             totalFail += 1
-    print("{0}".format(totalFail))
-    avg = totalGreed / (reps - totalFail)
-    print("Avg Steps/ successful run (Greedy): {0}".format(avg))
-    print("Percent successful runs (Greedy): {0}\n".format(reps-totalFail))
-    totalFail = 0
+    avg = totalGreedy / (reps - totalFail)
+    log("Avg Steps/ successful run (Greedy): {0}".format(avg))
+    log("Percent successful runs (Greedy): {0}\n".format((((reps-totalFail)/reps))*100))
+    total= 0
 
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
@@ -71,7 +70,7 @@ def finalTest(agent,environment,reps):
             totalFail += 1
     avg = totalUCS / (reps - totalFail)
     print("Avg Steps/ successful run (UCS): {0}".format(avg))
-    print("Percent successful runs (UCS): {0}\n".format(reps-totalFail))
+    print("Percent successful runs (UCS): {0}\n".format((reps-totalFail)/reps)*100)
 
 
 main()
