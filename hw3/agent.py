@@ -5,6 +5,7 @@ from envi import *
 import math
 import queue
 import random
+import operator
 
 DEBUG = False
 #:::::logger:::::
@@ -57,25 +58,21 @@ class Agent: #Initialize the Agent with Variables
         self.visit(env)
         log2("Moving UP        (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locY += 1
-        self.stepCount += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
     def moveDown(self,env):
         self.visit(env)
         log2("Moving DOWN      (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locY -= 1
-        self.stepCount += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
     def moveLeft(self,env):
         self.visit(env)
         log2("Moving LEFT      (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locX -= 1
-        self.stepCount += 1
         log("--> ("+ str(self.locX)+", "+str(self.locY)+")")
     def moveRight(self,env):
         self.visit(env)
         log2("Moving RIGHT     (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locX += 1
-        self.stepCount += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
     def visit(self,env):
         log("visiting ({0}, {1})".format(self.locX,self.locY))
@@ -118,7 +115,6 @@ class Agent: #Initialize the Agent with Variables
     def followPath(self,env):
         self.locX = 0
         self.locY = 0
-        self.stepCount = 0
         log("following path:\n{0}".format(self.finalPath))
         for i in range(len(self.finalPath)):
             xy0 = self.squareToCoords(env,self.finalPath[i][0])
@@ -188,16 +184,15 @@ class Agent: #Initialize the Agent with Variables
         #reset queue
         self.list = [0]
         self.visited = []
-        self.success = 0
         self.stepCount = 0
         while (len(self.list) > 0):
             log("current Queue {0}".format(self.list))
             parent = self.list.pop(0)
             log("parent is {0}".format(parent))
-            #log("parent[1] is {0}".format(parent[1]))
+            log("parent[1] is {0}".format(parent[1]))
             if self.squareToNode(env,parent[1][len(parent[1])-1]) == 3:
                 log("this is the path? {0}".format(parent[1]))
-                self.finalPath = parent
+                self.finalPath = self.trimPath()
                 log("{0}".format(self.finalPath))
                 return (1,self.stepCount)
             for child in self.expand(env,parent[1][len(parent[1])-1]):
@@ -208,46 +203,43 @@ class Agent: #Initialize the Agent with Variables
                     temp = [parent[0]+1,(parent[1] + [child])]
                     log(" About to add temp = {0} to queue".format(temp))
                     self.list.append(temp)
+                    self.pathRecord.append((parent,child))
                     self.list.sort()
                     log("element added is :{0}".format(temp))
-                    self.success = 1
             self.visited.append(parent)
-        return (0, -1)
-    def greed(self,env):
-        #reset priorityqueue
+        return (0, 0)
+    def greedy(self,env):
         self.list = [0]
         self.visited = []
-        self.pathRecord = [(0,0)]
         self.stepCount = 0
-        while (len(self.list) > 0):
+        while len(self.list) > 0:
             parent = self.list.pop(0)
-            log("Parent = {0}".format(parent))
-            if self.squareToNode(env,parent) == 3:
-                log("found path to goal")
-                log("Path record holds:{0}".format(self.pathRecord))
-                self.finalPath = self.trimPath(env)
+            print("    parent:{0}".format(parent))
+            #base cases
+            if self.squareToNode(env, int(parent)) == 3:
+                print("SUCCESS: Path found!")
                 return (1, self.stepCount)
-            for item in self.expand(env,parent):
-                if item in self.visited:
-                    continue
-                if item not in self.list:
-                    x = self.squareToCoords(env,item)[0]
-                    y = self.squareToCoords(env,item)[1]
-                    heur = self.findHyoo(env,item)
-                    listlen = len(self.list)
-                    itemOrder = listlen
-                    i = 0
-                    while itemOrder == listlen and i < listlen:
-                        if heur < self.findHyoo(env,self.list[i]):
-                            itemOrder = i
-                            self.list.inset(item,i)
-                            self.pathRecord.append((parent,item))
-                            log("About to add temp = {0} to queue".format(temp))
-                            self.success = 1
-                        else:
-                            i += 1
+            if parent in self.visited:
+                print("FAILURE: stuck in loop")
+                return (0,0)
+            exp = self.expand(env,parent)
+            choices = []
+            for i in range(0,len(exp)):
+                choice = (exp[i], self.findHyoo(env, exp[i]))
+                print("adding choice: {0}".format(choice))
+                choices.append(choice)
+            choices.sort(key = operator.itemgetter(1))
+            print("choices (sorted): {0}".format(choices))
+            if len(choices) >0:
+                currentTest = choices.pop(0)[0]
+                self.list.append(currentTest)
+                self.stepCount += 1
+                self.pathRecord.append((parent,currentTest))
+                print("Moving to {0}".format(currentTest))
                 self.visited.append(parent)
-            return (0, 0)
+            else:
+                print("FAILURE, no available choices from this point")
+                return (0,0)
 
 
     #def aStar(self,env):
