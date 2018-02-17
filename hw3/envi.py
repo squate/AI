@@ -53,7 +53,7 @@ class envi:
     def assignCosts(self):
         costs = copy.deepcopy(self.edges)
         for i in range(self.sidelength*self.sidelength):
-            for j in range(self.sidelength*self.sidelength)
+            for j in range(self.sidelength*self.sidelength):
                 costs[i][j] = random.randint
     def visit(self,x,y):
         log("visiting{0},{1}".format(x,y))
