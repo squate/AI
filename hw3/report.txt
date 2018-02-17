@@ -21,3 +21,6 @@ Greedy
     success: a smidgen over 50%
     strengths: when it works, it REEEAAAALLY works
     weaknesses: gets in its own way, gets stuck in loops like half of the time
+
+A*:
+    who knows
