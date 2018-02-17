@@ -51,7 +51,7 @@ def finalTest(agent,environment,reps):
 
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
-        run = agent.greed(dungeon)
+        run = agent.greedy(dungeon)
         if run[0] == 1:
             totalGreed += run[1]
         else:
