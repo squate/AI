@@ -1,0 +1,57 @@
+Showing Grid
+x=0:[8, 1, 0, 0, 0, 0]
+x=1:[0, 0, 1, 1, 1, 1]
+x=2:[1, 0, 0, 1, 0, 1]
+x=3:[0, 0, 0, 1, 0, 1]
+x=4:[1, 1, 0, 0, 1, 0]
+x=5:[0, 0, 0, 0, 1, 3]
+current Queue [[[0], 0]]
+parent is [[0], 0]
+parent[0] is [0]
+temp = [[0, 1], 1]
+adding Child:1: to parent
+element added is :[[0, 1], 1]
+current Queue [[[0, 1], 1]]
+parent is [[0, 1], 1]
+parent[0] is [0, 1]
+temp = [[0, 1, 0], 2]
+adding Child:0: to parent
+element added is :[[0, 1, 0], 2]
+temp = [[0, 1, 7], 2]
+adding Child:7: to parent
+element added is :[[0, 1, 7], 2]
+current Queue [[[0, 1, 0], 2], [[0, 1, 7], 2]]
+parent is [[0, 1, 0], 2]
+parent[0] is [0, 1, 0]
+temp = [[0, 1, 0, 1], 3]
+adding Child:1: to parent
+element added is :[[0, 1, 0, 1], 3]
+current Queue [[[0, 1, 0, 1], 3], [[0, 1, 7], 2]]
+parent is [[0, 1, 0, 1], 3]
+parent[0] is [0, 1, 0, 1]
+temp = [[0, 1, 0, 1, 0], 4]
+adding Child:0: to parent
+element added is :[[0, 1, 0, 1, 0], 4]
+temp = [[0, 1, 0, 1, 7], 4]
+adding Child:7: to parent
+element added is :[[0, 1, 0, 1, 7], 4]
+current Queue [[[0, 1, 0, 1, 0], 4], [[0, 1, 0, 1, 7], 4], [[0, 1, 7], 2]]
+parent is [[0, 1, 0, 1, 0], 4]
+parent[0] is [0, 1, 0, 1, 0]
+temp = [[0, 1, 0, 1, 0, 1], 5]
+adding Child:1: to parent
+element added is :[[0, 1, 0, 1, 0, 1], 5]
+current Queue [[[0, 1, 0, 1, 0, 1], 5], [[0, 1, 0, 1, 7], 4], [[0, 1, 7], 2]]
+parent is [[0, 1, 0, 1, 0, 1], 5]
+parent[0] is [0, 1, 0, 1, 0, 1]
+temp = [[0, 1, 0, 1, 0, 1, 0], 6]
+adding Child:0: to parent
+element added is :[[0, 1, 0, 1, 0, 1, 0], 6]
+temp = [[0, 1, 0, 1, 0, 1, 7], 6]
+adding Child:7: to parent
+element added is :[[0, 1, 0, 1, 0, 1, 7], 6]
+current Queue [[[0, 1, 0, 1, 0, 1, 0], 6], [[0, 1, 0, 1, 0, 1, 7], 6], [[0, 1, 0, 1, 7], 4], [[0, 1, 7], 2]]
+parent is [[0, 1, 0, 1, 0, 1, 0], 6]
+parent[0] is [0, 1, 0, 1, 0, 1, 0]
+temp = [[0, 1, 0, 1, 0, 1, 0, 1], 7]
+
