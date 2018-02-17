@@ -1,0 +1,17 @@
+BFS
+    Average steps: 26.987
+    %success: 77
+    strengths: tends to find *a* path more often than some competitors
+    weaknesses: takes a hot while to get there, not optimized for anything
+                except looking  at every element in a predetermined order
+
+DFS
+    avg steps: 17.815
+    %success: 65
+    strengths: less work than BFS when it works
+    weaknesses: less success than BFS, lack of optimization, it simply looks
+                at everything in a specific order as opposed to making informed
+                decisions
+
+UCS
+    does not run as of yet
