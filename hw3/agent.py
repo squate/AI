@@ -3,6 +3,8 @@
 from random import randint
 from envi import *
 import math
+import queue
+import random
 
 DEBUG = False
 #:::::logger:::::
@@ -90,12 +92,14 @@ class Agent: #Initialize the Agent with Variables
         return neighbors
     #Find Heuristic Value of each square using Distance formula
     #this will probably be used for A*
-    def findHyoo(self,env,x,y):
+    def findHyoo(self,env,square):
+        x = int(square%env.sidelength)
+        y = int((square-x)/env.sidelength)
         goalx = env.getSideLength()-1
         goaly = env.getSideLength()-1
         #distance formula
         d = ((((goalx-x)**2) + ((goaly-y)**2))**(1/2.0))
-        log("distance from {0}{1} to goal is {2}".format(x,y,d))
+        log("distance from {0} to goal is {1}".format(square,d))
         return d
 #:::::path-related functions:::::
     def trimPath(self,env):
@@ -137,56 +141,65 @@ class Agent: #Initialize the Agent with Variables
         #reset stack
         self.list = [0]
         self.visited = []
+        self.stepCount = 0
         while (len(self.list) > 0):
             parent = self.list.pop();
             log("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) ==3:
                 log("found path to goal")
-                self.finalPath = self.trimPath(env)
-                return True
+                #self.finalPath = self.trimPath(env)
+                return (1,self.stepCount)
             for item in self.expand(env,parent):
                 if item in self.visited:
                     continue
                 if item not in self.list:
                     self.list.append(item)
                     self.pathRecord.append((parent,item))
+                    self.stepCount += 1
                     log("added Square:{0}: to stack, stack is now {1}".format(item,self.list))
             self.visited.append(parent)
+        return (0, -1)
     def BFS(self,env):
         #reset queue
         self.list = [0]
         self.visited = []
         self.pathRecord = [(0,0)]
+        self. success = 0
+        self.stepCount = 0
         while (len(self.list) > 0):
             parent = self.list.pop(0)
             log("Parent = {0}".format(parent))
-            if self.squareToNode(env,parent) ==3:
+            if self.squareToNode(env,parent) == 3:
                 log("found path to goal")
                 log("Path record holds:{0}".format(self.pathRecord))
-                self.finalPath = self.trimPath(env)
-                return True
+                #self.finalPath = self.trimPath(env)
+                return (1, self.stepCount)
             for item in self.expand(env,parent):
                 if item in self.visited:
                     continue
                 if item not in self.list:
                     self.list.append(item)
+                    self.stepCount += 1
                     self.pathRecord.append((parent,item))
                     log("added Square:{0}: to Queue, Queue is now {1}".format(item,self.list))
             self.visited.append(parent)
-            start = parent
+        return (0,-1)
     def UCS(self,env):
+        #reset queue
         self.list = [0]
-        self.visited =[]
+        self.visited = []
+        self.success = 0
+        self.stepCount = 0
         while (len(self.list) > 0):
             log("current Queue {0}".format(self.list))
             parent = self.list.pop(0)
             log("parent is {0}".format(parent))
-            log("parent[1] is {0}".format(parent[1]))
-            if self.squareToNode(env,parent[1][len(parent[1])-1])==3:
+            #log("parent[1] is {0}".format(parent[1]))
+            if self.squareToNode(env,parent[1][len(parent[1])-1]) == 3:
                 log("this is the path? {0}".format(parent[1]))
                 self.finalPath = parent
-                print("{0}".format(self.finalPath))
-                return parent
+                log("{0}".format(self.finalPath))
+                return (1,self.stepCount)
             for child in self.expand(env,parent[1][len(parent[1])-1]):
                 if child in self.visited:
                     continue
@@ -197,9 +210,46 @@ class Agent: #Initialize the Agent with Variables
                     self.list.append(temp)
                     self.list.sort()
                     log("element added is :{0}".format(temp))
+                    self.success = 1
             self.visited.append(parent)
-        return
+        return (0, -1)
     def greed(self,env):
-        return
-    def aStar(self,env):
-        return
+        #reset priorityqueue
+        self.list = [0]
+        self.visited = []
+        self.pathRecord = [(0,0)]
+        self.stepCount = 0
+        while (len(self.list) > 0):
+            parent = self.list.pop(0)
+            log("Parent = {0}".format(parent))
+            if self.squareToNode(env,parent) == 3:
+                log("found path to goal")
+                log("Path record holds:{0}".format(self.pathRecord))
+                self.finalPath = self.trimPath(env)
+                return (1, self.stepCount)
+            for item in self.expand(env,parent):
+                if item in self.visited:
+                    continue
+                if item not in self.list:
+                    x = self.squareToCoords(env,item)[0]
+                    y = self.squareToCoords(env,item)[1]
+                    heur = self.findHyoo(env,item)
+                    listlen = len(self.list)
+                    itemOrder = listlen
+                    i = 0
+                    while itemOrder == listlen and i < listlen:
+                        if heur < self.findHyoo(env,self.list[i]):
+                            itemOrder = i
+                            self.list.inset(item,i)
+                            self.pathRecord.append((parent,item))
+                            log("About to add temp = {0} to queue".format(temp))
+                            self.success = 1
+                        else:
+                            i += 1
+                self.visited.append(parent)
+            return (0, 0)
+
+
+    #def aStar(self,env):
+    #    env.assignCosts()
+    #    return
