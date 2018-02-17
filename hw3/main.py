@@ -13,8 +13,7 @@ def log(s):
 def main():
     dungeon = envi(6)
     bruce = Agent()
-    totalGreed = 0
-    finalTest(bruce,dungeon,1000)
+    finalTest(bruce,dungeon,100)
 
 def finalTest(agent,environment,reps):
     totalBFS = 0
