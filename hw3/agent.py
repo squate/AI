@@ -202,20 +202,19 @@ class Agent: #Initialize the Agent with Variables
                     log("element added is :{0}".format(temp))
             self.visited.append(parent)
         return (0, 0)
-    def greedy(self,env):
+    def greedy(self,env): #greedy pathfinding alg
         self.resetAttributes()
-        while len(self.list) > 0:
-            parent = self.list.pop(0)
+        while len(self.list) > 0: #while there are options
+            parent = self.list.pop(0) #get that item out of the thing
             log("    parent:{0}".format(parent))
             #base cases
-            if self.squareToNode(env, int(parent)) == 3:
+            if self.squareToNode(env, int(parent)) == 3: #if we're at the exit
                 log("SUCCESS: Path found!")
                 return (1, self.stepCount)
-            if parent in self.visited:
+            if parent in self.visited: #if we've already been here before
                 log("FAILURE: stuck in loop")
                 return (0,0)
-            #if base cases not met, expand parent node
-            exp = self.expand(env,parent)
+            exp = self.expand(env,parent) #if base cases not met, expand parent node
             choices = []
             for i in range(0,len(exp)): #assign each child a heuristic value
                 choice = (exp[i], self.findHyoo(env, exp[i]))
@@ -231,7 +230,7 @@ class Agent: #Initialize the Agent with Variables
                 self.visited.append(parent)
             else: #if there are no options, additional base case
                 log("FAILURE, no available choices from this point")
-                return (0,)
+                return (0,0)
 
     #def aStar(self,env):
     #    env.assignCosts()
