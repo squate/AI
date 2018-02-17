@@ -19,35 +19,42 @@ class envi:
         self.nodes[self.sidelength-1][self.sidelength-1] = 3
         self.walls = 7
         self.addWalls()
-        self.edges = self.makeEdges(self.sidelength)
+        self.edges = self.makeEdges()
+        self.costs = self.assignCosts()
 #:::::setters and getters:::::
     def setSideLength(self,length):
         self.sidelength = length
     def getSideLength(self):
         return self.sidelength
-    def makeEdges(self,n): #create adjacency matrix from nodes[][]
-        w = n*n
+    def makeEdges(self): #create adjacency matrix from nodes[][]
+        n = self.sidelength
+        w = n*n #amount of total squares
         edgesGraph = [[0] * w for i in range(w)]
         for i in range(w): #set all possible adjacencies to 1 in matrix
             for j in range(w):
                 if i%n == 0:
-                    if (j == i+1 or j==i+n or j==i-n):
+                    if (j==i+1 or j==i+n or j==i-n):
                         edgesGraph[i][j] = 1
                 elif i%n == n-1:
-                    if (j == i-1 or j==i+n or j==i-n):
+                    if (j==i-1 or j==i+n or j==i-n):
                         edgesGraph[i][j] = 1
                 else:
-                    if (j == i-1 or j == i+1 or j == i+n or j == i-n):
+                    if (j==i-1 or j==i+1 or j==i+n or j==i-n):
                         edgesGraph[i][j] = 1
         for i in range(n): #change connections involving walls to 0 in matrix
             for j in range(n):
-                if self.nodes[i][j]== 1:
-                    index = int(n*j+i)
+                if self.nodes[i][j]==1:
+                    index = int(n * j + i)
                     for e in range(w):
                         edgesGraph[index][e] = 0
                     for e in range(w):
                         edgesGraph[e][index] = 0
         return edgesGraph
+    def assignCosts(self):
+        costs = copy.deepcopy(self.edges)
+        for i in range(self.sidelength*self.sidelength):
+            for j in range(self.sidelength*self.sidelength)
+                costs[i][j] = random.randint
     def visit(self,x,y):
         log("visiting{0},{1}".format(x,y))
         self.nodes[x][y] = 2
@@ -76,5 +83,5 @@ class envi:
         t = self.sidelength * self.sidelength
         s = agent.getstepCount()
         score = (s)/t
-        print("score (less is better): " +str(score))
+        print("score (less is better): " + str(score))
         return score
