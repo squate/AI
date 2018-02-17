@@ -15,3 +15,12 @@ DFS
 
 UCS
     does not run as of yet
+
+Greedy
+    avg steps: almost always 10, which is the absolute minimum
+    success: a smidgen over 50%
+    strengths: when it works, it REEEAAAALLY works
+    weaknesses: gets in its own way, gets stuck in loops like half of the time
+
+A*:
+    who knows
