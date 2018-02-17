@@ -27,9 +27,9 @@ class Agent: #Initialize the Agent with Variables
         self.pathRecord = []
         self.finalPath = []
 #:::::Getters and Setters:::::
-    def setName (self,name): #set method for name
+    def setName (self,name):
         self.name = name
-    def getName(self): #get method for name
+    def getName(self):
         return self.name
     def getAge(self):
         return self.age
@@ -41,78 +41,50 @@ class Agent: #Initialize the Agent with Variables
         return self.stepCount
     def getFinalPath(self):
         return self.finalPath
-#:::::converting between squares and nodes:::::
-    def nodeToSquare(self,env,x,y):
+    def resetAttributes(self): #reset everythin but name
+        self.visited = []
+        self.stepCount = 0
+        self.pathRecord = [(0,0)]
+        self.finalPath = []
+        self.locX = 0
+        self.locY = 0
+#:::::unit conversion (squares and nodes:::::
+    def coordsToSquare(self,env,x,y): #coords go in, square index comes out
         return x * env.getSideLength() + y
-    def squareToCoords(self, env, square):
+    def squareToCoords(self, env, square): #square index in, coords out in a tuple
         x = int(square%env.getSideLength())
         y = int((square - x)/env.getSideLength())
         return (x,y)
-    def squareToNode(self,env,square):
+    def squareToNode(self,env,square): #square index in, actual node returned
         l = env.getSideLength()
         x = int(square%l)
         y = int((square-x)/l)
         return env.nodes[x][y]
-#:::::movement (up, down, left and right):::::
-    def moveUp(self,env):
+#:::::actuators (up, down, left and right):::::
+    def moveUp(self,env): # +1 to y coordinate
         self.visit(env)
         log2("Moving UP        (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locY += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
-    def moveDown(self,env):
+    def moveDown(self,env): # -1 to y coordinate
         self.visit(env)
         log2("Moving DOWN      (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locY -= 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
-    def moveLeft(self,env):
+    def moveLeft(self,env): # -1 to x coordinate
         self.visit(env)
         log2("Moving LEFT      (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locX -= 1
         log("--> ("+ str(self.locX)+", "+str(self.locY)+")")
-    def moveRight(self,env):
+    def moveRight(self,env): # +1 to x coordinate
         self.visit(env)
         log2("Moving RIGHT     (" +str(self.locX)+", "+str(self.locY), ") ")
         self.locX += 1
         log("--> ("+str(self.locX)+", "+str(self.locY)+")")
-    def visit(self,env):
+    def visit(self,env): #mark a square on the environment as visited
         log("visiting ({0}, {1})".format(self.locX,self.locY))
         env.visit(self.locX,self.locY)
-#:::::Sensors::::::
-    def expand(self,env,sqr):
-        neighbors = []
-        square = sqr
-        for i in range(0,env.getSideLength()*env.getSideLength()):
-            if env.edges[square][i] == 1:
-                if self.squareToNode(env,i) != 1:
-                    neighbors.append(i)
-                #log(i)
-        return neighbors
-    #Find Heuristic Value of each square using Distance formula
-    #this will probably be used for A*
-    def findHyoo(self,env,square):
-        x = int(square%env.sidelength)
-        y = int((square-x)/env.sidelength)
-        goalx = env.getSideLength()-1
-        goaly = env.getSideLength()-1
-        #distance formula
-        d = ((((goalx-x)**2) + ((goaly-y)**2))**(1/2.0))
-        log("distance from {0} to goal is {1}".format(square,d))
-        return d
-#:::::path-related functions:::::
-    def trimPath(self,env):
-        temp = []
-        goal = self.pathRecord.pop()
-        while goal[1]!=((env.getSideLength()**2)-1):
-            goal = self.pathRecord.pop()
-        log("Goal is {0}, and we got there from {1}".format(goal[1],goal[0]))
-        temp.append(goal)
-        while temp[0][0] != 0:
-            for item in self.pathRecord:
-                if item[1] == temp[0][0]:
-                    temp.insert(0,item)
-        log("this is the trimmed path{0}".format(temp))
-        return temp
-    def followPath(self,env):
+    def followPath(self,env): #physically move the agent along the path it found
         self.locX = 0
         self.locY = 0
         log("following path:\n{0}".format(self.finalPath))
@@ -132,48 +104,72 @@ class Agent: #Initialize the Agent with Variables
                     self.moveLeft(env)
                 else:
                     return
+#:::::Sensors::::::
+    def expand(self,env,sqr): #input a square, returns array of its adjacent squares
+        neighbors = []
+        square = sqr
+        for i in range(0,env.getSideLength()*env.getSideLength()):
+            if env.edges[square][i] == 1:
+                if self.squareToNode(env,i) != 1:
+                    neighbors.append(i)
+                #log(i)
+        return neighbors
+    def findHyoo(self,env,square): #Find Heuristic value for a square using distance formula
+        x = int(square%env.sidelength)
+        y = int((square-x)/env.sidelength)
+        goalx = env.getSideLength()-1
+        goaly = env.getSideLength()-1
+        #distance formula
+        d = ((((goalx-x)**2) + ((goaly-y)**2))**(1/2.0))
+        log("distance from {0} to goal is {1}".format(square,d))
+        return d
+    def trimPath(self,env): #go through recorded path, streamline it
+        temp = []
+        goal = self.pathRecord.pop()
+        while goal[1]!=((env.getSideLength()**2)-1):
+            goal = self.pathRecord.pop()
+        log("Goal is {0}, and we got there from {1}".format(goal[1],goal[0]))
+        temp.append(goal)
+        while temp[0][0] != 0:
+            for item in self.pathRecord:
+                if item[1] == temp[0][0]:
+                    temp.insert(0,item)
+        log("this is the trimmed path{0}".format(temp))
+        return temp
 #:::::Search Algorithms:::::
-    def DFS(self,env):
-        #reset stack
-        self.list = [0]
-        self.visited = []
-        self.stepCount = 0
-        while (len(self.list) > 0):
-            parent = self.list.pop();
+    def DFS(self,env): #Depth-frist search pathfinding algorithm
+        self.resetAttributes() #list will be treated as a queue
+        while (len(self.list) > 0): #while there are options to explore
+            parent = self.list.pop(); #access top of stack
             log("Parent = {0}".format(parent))
-            if self.squareToNode(env,parent) ==3:
+            if self.squareToNode(env,parent) == 3: #if we arrive at the exit
                 log("found path to goal")
-                #self.finalPath = self.trimPath(env)
+                #self.finalPath = self.trimPath(env) #follows a trimmed version of found path
                 return (1,self.stepCount)
-            for item in self.expand(env,parent):
-                if item in self.visited:
+            for item in self.expand(env,parent): #expand parent node
+                if item in self.visited: #if we already expanded this node
                     continue
-                if item not in self.list:
+                if item not in self.list: #add item to list
                     self.list.append(item)
                     self.pathRecord.append((parent,item))
                     self.stepCount += 1
                     log("added Square:{0}: to stack, stack is now {1}".format(item,self.list))
             self.visited.append(parent)
-        return (0, -1)
-    def BFS(self,env):
-        #reset queue
-        self.list = [0]
-        self.visited = []
-        self.pathRecord = [(0,0)]
-        self. success = 0
-        self.stepCount = 0
+        return (0, -1) #if we run out of options and no path is found
+    def BFS(self,env): #Breadth-first search pathfinding algorithm
+        self.resetAttributes() #list will be treated as a queue
         while (len(self.list) > 0):
-            parent = self.list.pop(0)
+            parent = self.list.pop(0) #access front of queue
             log("Parent = {0}".format(parent))
-            if self.squareToNode(env,parent) == 3:
+            if self.squareToNode(env,parent) == 3: #if we're at the exit
                 log("found path to goal")
-                log("Path record holds:{0}".format(self.pathRecord))
-                #self.finalPath = self.trimPath(env)
+                log("Path record holds:{0}".format(self.pathRecord)) #print path
+                #self.finalPath = self.trimPath(env) #follows a trimmed version of found path
                 return (1, self.stepCount)
-            for item in self.expand(env,parent):
-                if item in self.visited:
+            for item in self.expand(env,parent): #for child nodes
+                if item in self.visited: #if we've already been to this node, don't do anything with it
                     continue
-                if item not in self.list:
+                if item not in self.list: #otherwise, add it to the back of the queue
                     self.list.append(item)
                     self.stepCount += 1
                     self.pathRecord.append((parent,item))
@@ -185,13 +181,15 @@ class Agent: #Initialize the Agent with Variables
         self.list = [(0,[[0,0],])]
         self.visited = []
         self.stepCount = 0
+        self.resetAttributes()
         while (len(self.list) > 0):
             print("current Queue {0}".format(self.list))
             parent = self.list.pop(0)
-            print("parent is {0}".format(parent))
-            print("parent[1] is {0}".format(parent[1]))
+
+            log("parent is {0}".format(parent))
+            log("parent[1] is {0}".format(parent[1]))
             if self.squareToNode(env,parent[1][len(parent[1])-1][1]) == 3:
-                print("this is the path? {0}".format(parent[1]))
+                log("this is the path? {0}".format(parent[1]))
                 self.finalPath = self.trimPath()
                 log("{0}".format(self.finalPath))
                 return (1,self.stepCount)
@@ -199,11 +197,10 @@ class Agent: #Initialize the Agent with Variables
                 if child in self.visited:
                     continue
                 if child not in parent[1]:
-                    print("adding Child:{0}: to parent".format(child))
+                    log("adding Child:{0}: to parent".format(child))
                     childnode = parent[1] + [[parent[1][len(parent[1])-1][1],child]]
-                    print("this is the childnode {0}".format(childnode))
+                    log("this is the childnode {0}".format(childnode))
                     temp = [parent[0]+1,childnode]
-                    print("About to add temp  = {0} to queue".format(temp))
                     self.list.append(temp)
                     self.pathRecord.append((parent,child))
                     self.list.sort()
@@ -211,9 +208,7 @@ class Agent: #Initialize the Agent with Variables
             self.visited.append(parent)
         return (0, 0)
     def greedy(self,env):
-        self.list = [0]
-        self.visited = []
-        self.stepCount = 0
+        self.resetAttributes()
         while len(self.list) > 0:
             parent = self.list.pop(0)
             log("    parent:{0}".format(parent))
@@ -224,25 +219,24 @@ class Agent: #Initialize the Agent with Variables
             if parent in self.visited:
                 log("FAILURE: stuck in loop")
                 return (0,0)
+            #if base cases not met, expand parent node
             exp = self.expand(env,parent)
             choices = []
-            for i in range(0,len(exp)):
+            for i in range(0,len(exp)): #assign each child a heuristic value
                 choice = (exp[i], self.findHyoo(env, exp[i]))
-                log("adding choice: {0}".format(choice))
                 choices.append(choice)
-            choices.sort(key = operator.itemgetter(1))
-            log("choices (sorted): {0}".format(choices))
-            if len(choices) >0:
+            choices.sort(key = operator.itemgetter(1)) #sort by distance, ascending
+            log("     choices (sorted): {0}".format(choices))
+            if len(choices) >0: #if there are choices at all
                 currentTest = choices.pop(0)[0]
                 self.list.append(currentTest)
                 self.stepCount += 1
                 self.pathRecord.append((parent,currentTest))
-                log("Moving to {0}".format(currentTest))
+                log("  Moving to {0}".format(currentTest))
                 self.visited.append(parent)
-            else:
+            else: #if there are no options, additional base case
                 log("FAILURE, no available choices from this point")
-                return (0,0)
-
+                return (0,)
 
     #def aStar(self,env):
     #    env.assignCosts()
