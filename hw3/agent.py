@@ -138,6 +138,7 @@ class Agent: #Initialize the Agent with Variables
         return temp
 #:::::Search Algorithms:::::
     def DFS(self,env): #Depth-frist search pathfinding algorithm
+        self.list =[0]
         self.resetAttributes() #list will be treated as a queue
         while (len(self.list) > 0): #while there are options to explore
             parent = self.list.pop(); #access top of stack
@@ -157,6 +158,7 @@ class Agent: #Initialize the Agent with Variables
             self.visited.append(parent)
         return (0, -1) #if we run out of options and no path is found
     def BFS(self,env): #Breadth-first search pathfinding algorithm
+        self.list = [0]
         self.resetAttributes() #list will be treated as a queue
         while (len(self.list) > 0):
             parent = self.list.pop(0) #access front of queue
@@ -183,16 +185,16 @@ class Agent: #Initialize the Agent with Variables
         self.stepCount = 0
         self.resetAttributes()
         while (len(self.list) > 0):
-            print("current Queue {0}".format(self.list))
+            log("current Queue {0}".format(self.list))
             parent = self.list.pop(0)
-
             log("parent is {0}".format(parent))
-            log("parent[1] is {0}".format(parent[1]))
+            log("parent[1][len(parent[1])-1][1] is {0}".format(parent[1][len(parent[1])-1][1]))
             if self.squareToNode(env,parent[1][len(parent[1])-1][1]) == 3:
                 log("this is the path? {0}".format(parent[1]))
-                self.finalPath = self.trimPath()
+                self.pathRecord = parent[1]
+                self.finalPath = self.trimPath(env)
                 log("{0}".format(self.finalPath))
-                return (1,self.stepCount)
+                return (1,parent[0])
             for child in self.expand(env,parent[1][len(parent[1])-1][1]):
                 if child in self.visited:
                     continue
@@ -202,12 +204,12 @@ class Agent: #Initialize the Agent with Variables
                     log("this is the childnode {0}".format(childnode))
                     temp = [parent[0]+1,childnode]
                     self.list.append(temp)
-                    self.pathRecord.append((parent,child))
-                    self.list.sort()
-                    print("element added is :{0}".format(temp))
-            self.visited.append(parent)
+                    self.list.sort(reverse = True)
+                    log("element added is :{0}".format(temp))
+            self.visited.append(parent[1][-1][1])
         return (0, 0)
     def greedy(self,env): #greedy pathfinding alg
+        self.list = [0]
         self.resetAttributes()
         while len(self.list) > 0: #while there are options
             parent = self.list.pop(0) #get that item out of the thing
