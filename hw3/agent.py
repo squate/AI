@@ -214,31 +214,31 @@ class Agent: #Initialize the Agent with Variables
         self.stepCount = 0
         while len(self.list) > 0:
             parent = self.list.pop(0)
-            print("    parent:{0}".format(parent))
+            log("    parent:{0}".format(parent))
             #base cases
             if self.squareToNode(env, int(parent)) == 3:
-                print("SUCCESS: Path found!")
+                log("SUCCESS: Path found!")
                 return (1, self.stepCount)
             if parent in self.visited:
-                print("FAILURE: stuck in loop")
+                log("FAILURE: stuck in loop")
                 return (0,0)
             exp = self.expand(env,parent)
             choices = []
             for i in range(0,len(exp)):
                 choice = (exp[i], self.findHyoo(env, exp[i]))
-                print("adding choice: {0}".format(choice))
+                log("adding choice: {0}".format(choice))
                 choices.append(choice)
             choices.sort(key = operator.itemgetter(1))
-            print("choices (sorted): {0}".format(choices))
+            log("choices (sorted): {0}".format(choices))
             if len(choices) >0:
                 currentTest = choices.pop(0)[0]
                 self.list.append(currentTest)
                 self.stepCount += 1
                 self.pathRecord.append((parent,currentTest))
-                print("Moving to {0}".format(currentTest))
+                log("Moving to {0}".format(currentTest))
                 self.visited.append(parent)
             else:
-                print("FAILURE, no available choices from this point")
+                log("FAILURE, no available choices from this point")
                 return (0,0)
 
 
