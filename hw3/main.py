@@ -23,44 +23,55 @@ def finalTest(agent,environment,reps):
     totalBFS = 0
     totalDFS = 0
     totalUCS = 0
-    totalGreed = 0
+    totalGreedy = 0
     totalFail = 0
+
+    print("BFS:")
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
         run = agent.BFS(dungeon)
         if run[0] == 1:
             totalBFS += run[1]
-        else:
+        elif run[0] == 0:
             totalFail += 1
-    avg = totalBFS / (reps - totalFail)
-    print("Avg Steps/ successful run (BFS): {0}".format(avg))
-    print("Percent successful runs (BFS): {0}\n".format(reps-totalFail))
-    totalFail = 0
+    if (totalFail<reps):
+        avg = totalBFS / (reps - totalFail)
+        odds = 100*(reps-totalFail)/reps
+        print("    Avg Steps to exit: {0}".format(avg))
+        print("    Percent success: {0}\n".format(odds))
+    else:
+        print("    Failed every one of its {0} runs\n".format(reps))
 
+    print("DFS:")
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
         run = agent.DFS(dungeon)
         if run[0] == 1:
             totalDFS += run[1]
-        else:
+        elif run[0] == 0:
             totalFail += 1
-    avg = (totalDFS / (reps - totalFail))
-    print("Avg Steps/ successful run (DFS): {0}".format(avg))
-    print("Percent successful runs (DFS): {0} \n".format(reps-totalFail))
-    toalFail = 0
-
+    if (totalFail<reps):
+        avg = totalDFS / (reps - totalFail)
+        odds = 100*(reps-totalFail)/reps
+        print("    Avg Steps to exit: {0}".format(avg))
+        print("    Percent success: {0}\n".format(odds))
+    else:
+        print("    Failed every one of its {0} runs".format(reps))
+    print("UCS:")
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
         run = agent.greedy(dungeon)
         if run[0] == 1:
-            totalGreed += run[1]
-        else:
+            totalGreedy += run[1]
+        elif run[0] == 0:
             totalFail += 1
-    print("{0}".format(totalFail))
-    avg = totalGreed / (reps - totalFail)
-    print("Avg Steps/ successful run (Greedy): {0}".format(avg))
-    print("Percent successful runs (Greedy): {0}\n".format(reps-totalFail))
-    totalFail = 0
+    if (totalFail<reps):
+        avg = totalGreedy / (reps - totalFail)
+        odds = 100*(reps-totalFail)/reps
+        print("    Avg Steps to exit: {0}".format(avg))
+        print("    Percent success: {0}\n".format(odds))
+    else:
+        print("    Failed every one of its {0} runs".format(reps))
 
     for i in range(reps):
         dungeon = envi(environment.getSideLength())
@@ -69,9 +80,13 @@ def finalTest(agent,environment,reps):
             totalUCS += run[1]
         else:
             totalFail += 1
-    avg = totalUCS / (reps - totalFail)
-    print("Avg Steps/ successful run (UCS): {0}".format(avg))
-    print("Percent successful runs (UCS): {0}\n".format(reps-totalFail))
+    if (totalFail<reps):
+        avg = totalUCS / (reps - totalFail)
+        odds = 100*(reps-totalFail)/reps
+        print("    Avg Steps to exit: {0}".format(avg))
+        print("    Percent success: {0}\n".format(odds))
+    else:
+        print("    Failed every one of its {0} runs".format(reps))
 
 
 main()
