@@ -182,30 +182,32 @@ class Agent: #Initialize the Agent with Variables
         return (0,-1)
     def UCS(self,env):
         #reset queue
-        self.list = [0]
+        self.list = [(0,[[0,0],])]
         self.visited = []
         self.stepCount = 0
         while (len(self.list) > 0):
-            log("current Queue {0}".format(self.list))
+            print("current Queue {0}".format(self.list))
             parent = self.list.pop(0)
-            log("parent is {0}".format(parent))
-            log("parent[1] is {0}".format(parent[1]))
-            if self.squareToNode(env,parent[1][len(parent[1])-1]) == 3:
-                log("this is the path? {0}".format(parent[1]))
+            print("parent is {0}".format(parent))
+            print("parent[1] is {0}".format(parent[1]))
+            if self.squareToNode(env,parent[1][len(parent[1])-1][1]) == 3:
+                print("this is the path? {0}".format(parent[1]))
                 self.finalPath = self.trimPath()
                 log("{0}".format(self.finalPath))
                 return (1,self.stepCount)
-            for child in self.expand(env,parent[1][len(parent[1])-1]):
+            for child in self.expand(env,parent[1][len(parent[1])-1][1]):
                 if child in self.visited:
                     continue
                 if child not in parent[1]:
-                    log("adding Child:{0}: to parent".format(child))
-                    temp = [parent[0]+1,(parent[1] + [child])]
-                    log(" About to add temp = {0} to queue".format(temp))
+                    print("adding Child:{0}: to parent".format(child))
+                    childnode = parent[1] + [[parent[1][len(parent[1])-1][1],child]]
+                    print("this is the childnode {0}".format(childnode))
+                    temp = [parent[0]+1,childnode]
+                    print("About to add temp  = {0} to queue".format(temp))
                     self.list.append(temp)
                     self.pathRecord.append((parent,child))
                     self.list.sort()
-                    log("element added is :{0}".format(temp))
+                    print("element added is :{0}".format(temp))
             self.visited.append(parent)
         return (0, 0)
     def greedy(self,env):

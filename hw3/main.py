@@ -17,8 +17,8 @@ def main():
     dungeon = envi(6)
     bruce = Agent()
     totalGreed = 0
-    finalTest(bruce,dungeon,100)
-
+    #finalTest(bruce,dungeon,100)
+    bruce.UCS(dungeon)
 def finalTest(agent,environment,reps):
     totalBFS = 0
     totalDFS = 0
