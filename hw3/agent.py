@@ -6,6 +6,7 @@ import math
 import queue
 import random
 import operator
+import heapq
 
 DEBUG = False
 #:::::logger:::::
@@ -15,6 +16,9 @@ def log(s):
 def log2(s,e):
     if DEBUG == True:
         print(s,end = e)
+def loge(s):
+    if DEBUG == True:
+        print(s)
 #:::::Class Agent and related functions:::::
 class Agent: #Initialize the Agent with Variables
     def __init__(self):
@@ -228,7 +232,7 @@ class Agent: #Initialize the Agent with Variables
                 choices.append(choice)
             choices.sort(key = operator.itemgetter(1)) #sort by distance, ascending
             log("     choices (sorted): {0}".format(choices))
-            if len(choices) >0: #if there are choices at all
+            if len(choices) > 0: #if there are choices at all
                 currentTest = choices.pop(0)[0]
                 self.list.append(currentTest)
                 self.stepCount += 1
@@ -238,7 +242,46 @@ class Agent: #Initialize the Agent with Variables
             else: #if there are no options, additional base case
                 log("FAILURE, no available choices from this point")
                 return (0,0)
+    def aStar(self,env):
+        self.resetAttributes()
+        self.list = PriorityQueue()
+        self.list.put(0,0)
+        costForNow = {}
+        costForNow[0] = 0
+        camefrom = {}
+        camefrom[0] = None
+        while len(self.list.elements) > 0:
+            loge("list as of now: {0}".format(self.list.elements))
+            parent = int(self.list.get())
+            loge("checking square {}'s neighbors".format(parent))
+            #check to see if we made it
+            if self.squareToNode(env, parent) == 3:
+                loge("SUCCESS! Path found!")
+                loge("total cost: {0}".format(costForNow[parent]))
+                return (1, self.stepCount,costForNow[parent])
+            #expand current node
+            options = self.expand(env, parent)
+            if len(options) > 0:
+                loge("options: {0}".format(options))
+                for sqr in options:
+                    newCost = costForNow[parent] + env.getCost(parent, int(sqr))
+                    if sqr not in costForNow or newCost < costForNow[sqr]:#or self.squareToNode(env,sqr) == 3:
+                        costForNow[sqr] = newCost
+                        priority = newCost + self.findHyoo(env, sqr)
+                        loge("cost to move to {0}: {1}".format(sqr,priority))
+                        self.list.put(sqr, priority)
+                        self.stepCount += 1
+                        camefrom[sqr] = parent
+        return (0,0)
 
-    #def aStar(self,env):
-    #    env.assignCosts()
-    #    return
+
+class PriorityQueue:
+    def __init__(self):
+        self.elements = []
+    def empty(self):
+        return len(self.elements) == 0
+    def put(self,item,priority):
+        heapq.heappush(self.elements, (priority, item))
+        loge("pushing {0}".format(item))
+    def get(self):
+        return heapq.heappop(self.elements)[1]
