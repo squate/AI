@@ -13,14 +13,15 @@ def log(s):
         print(s)
 #:::::constructor:::::
 class envi:
-    def __init__(self,n):
+    def __init__(self, n, has_costs):
         self.sidelength = n
         self.nodes = [[0] * self.sidelength for i in range(self.sidelength)]
         self.nodes[self.sidelength-1][self.sidelength-1] = 3
         self.walls = 7
         self.addWalls()
         self.edges = self.makeEdges()
-        self.costs = self.assignCosts()
+        if has_costs == True:
+            self.costs = self.assignCosts()
 #:::::setters and getters:::::
     def setSideLength(self,length):
         self.sidelength = length
@@ -54,7 +55,17 @@ class envi:
         costs = copy.deepcopy(self.edges)
         for i in range(self.sidelength*self.sidelength):
             for j in range(self.sidelength*self.sidelength):
-                costs[i][j] = random.randint
+                costs[i][j] = random.randint(1, 20)
+        return costs
+    def getCost(self,origin,destination):
+        return int(self.costs[origin][destination])
+    def resetEverythingButCosts(self):
+        for i in range(self.sidelength):
+            for j in range(self.sidelength):
+                self.nodes[i][j] = 0
+        self.nodes[self.sidelength-1][self.sidelength-1] = 3
+        self.addWalls()
+        self.makeEdges()
     def visit(self,x,y):
         log("visiting{0},{1}".format(x,y))
         self.nodes[x][y] = 2
