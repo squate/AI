@@ -63,6 +63,7 @@ class envi:
         for i in range(self.sidelength):
             for j in range(self.sidelength):
                 self.nodes[i][j] = 0
+        self.makeEdges()
         self.nodes[self.sidelength-1][self.sidelength-1] = 3
         self.addWalls()
         self.makeEdges()
@@ -90,9 +91,3 @@ class envi:
         for x in range(0,(self.sidelength * self.sidelength),1):
             gridline = ''.join(str(self.edges[x]))
             print("Square{:2}:{:1}".format(x,gridline))
-    def evaluate(self,agent):
-        t = self.sidelength * self.sidelength
-        s = agent.getstepCount()
-        score = (s)/t
-        print("score (less is better): " + str(score))
-        return score
