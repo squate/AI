@@ -14,7 +14,7 @@ def main():
     dungeon = envi(6, False)
     bruce = Agent()
     totalGreed = 0
-    finalTest(bruce,dungeon,1000)
+    finalTest(bruce,dungeon,100)
 def finalTest(agent,environment,reps):
     totalBFS = 0
     totalDFS = 0
