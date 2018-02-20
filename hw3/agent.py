@@ -16,9 +16,6 @@ def log(s):
 def log2(s,e):
     if DEBUG == True:
         print(s,end = e)
-def loge(s):
-    if DEBUG == True:
-        print(s)
 #:::::Class Agent and related functions:::::
 class Agent: #Initialize the Agent with Variables
     def __init__(self):
@@ -108,15 +105,15 @@ class Agent: #Initialize the Agent with Variables
                     self.moveLeft(env)
                 else:
                     return
+        if DEBUG == True:
+            env.showgrid(self)
 #:::::Sensors::::::
     def expand(self,env,sqr): #input a square, returns array of its adjacent squares
         neighbors = []
         square = sqr
         for i in range(0,env.getSideLength()*env.getSideLength()):
             if env.edges[square][i] == 1:
-                if self.squareToNode(env,i) != 1:
-                    neighbors.append(i)
-                #log(i)
+                neighbors.append(i)
         return neighbors
     def findHyoo(self,env,square): #Find Heuristic value for a square using distance formula
         x = int(square%env.sidelength)
@@ -149,7 +146,8 @@ class Agent: #Initialize the Agent with Variables
             log("Parent = {0}".format(parent))
             if self.squareToNode(env,parent) == 3: #if we arrive at the exit
                 log("found path to goal")
-                #self.finalPath = self.trimPath(env) #follows a trimmed version of found path
+                self.finalPath = self.trimPath(env) #follows a trimmed version of found path
+                self.followPath(env)
                 return (1,self.stepCount)
             for item in self.expand(env,parent): #expand parent node
                 if item in self.visited: #if we already expanded this node
@@ -170,7 +168,8 @@ class Agent: #Initialize the Agent with Variables
             if self.squareToNode(env,parent) == 3: #if we're at the exit
                 log("found path to goal")
                 log("Path record holds:{0}".format(self.pathRecord)) #print path
-                #self.finalPath = self.trimPath(env) #follows a trimmed version of found path
+                self.finalPath = self.trimPath(env) #follows a trimmed version of found path
+                self.followPath(env)
                 return (1, self.stepCount)
             for item in self.expand(env,parent): #for child nodes
                 if item in self.visited: #if we've already been to this node, don't do anything with it
@@ -197,6 +196,7 @@ class Agent: #Initialize the Agent with Variables
                 log("this is the path? {0}".format(parent[1]))
                 self.pathRecord = parent[1]
                 self.finalPath = self.trimPath(env)
+                self.followPath(env)
                 log("{0}".format(self.finalPath))
                 return (1,parent[0])
             for child in self.expand(env,parent[1][len(parent[1])-1][1]):
@@ -221,6 +221,8 @@ class Agent: #Initialize the Agent with Variables
             #base cases
             if self.squareToNode(env, int(parent)) == 3: #if we're at the exit
                 log("SUCCESS: Path found!")
+                self.finalPath = self.trimPath(env) #follows a trimmed version of found path
+                self.followPath(env)
                 return (1, self.stepCount)
             if parent in self.visited: #if we've already been here before
                 log("FAILURE: stuck in loop")
@@ -243,7 +245,7 @@ class Agent: #Initialize the Agent with Variables
                 log("FAILURE, no available choices from this point")
                 return (0,0)
     def aStar(self,env):
-        loge("A* is go")
+        log("A* is go")
         self.resetAttributes()
         self.list = PriorityQueue()
         self.list.put(0,0)
@@ -252,29 +254,33 @@ class Agent: #Initialize the Agent with Variables
         camefrom = {}
         camefrom[0] = None
         while len(self.list.elements) > 0:
-            loge("    list as of now: {0}".format(self.list.elements))
+            log("    list as of now: {0}".format(self.list.elements))
             parent = int(self.list.get())
             #check to see if we made it
             if self.squareToNode(env, parent) == 3:
-                loge("    SUCCESS! Path found! total cost: {0}\n".format(costForNow[parent]))
+                log("    SUCCESS! Path found! total cost: {0}\n".format(costForNow[parent]))
+                self.finalPath = self.trimPath(env) #follows a trimmed version of found path
+                self.followPath(env)
                 return (1, self.stepCount,costForNow[parent])
             #expand current node
-            loge("    checking square {}'s neighbors".format(parent))
+            log("    checking square {}'s neighbors".format(parent))
             options = self.expand(env, parent)
             if len(options) > 0:
-                loge("    options: {0}".format(options))
+                log("    options: {0}".format(options))
                 for sqr in options:
+                    #check the square's cost
                     newCost = costForNow[parent] + env.getCost(parent, int(sqr))
                     if sqr not in costForNow or newCost < costForNow[sqr]:#or self.squareToNode(env,sqr) == 3:
-                        costForNow[sqr] = newCost
+                        costForNow[sqr] = newCost #set the costfornow to either the first found cost or this one, which would be lower
                         priority = newCost + self.findHyoo(env, sqr)
-                        loge("    cost to move to {0}: {1}".format(sqr,priority))
+                        log("    cost to move to {0}: {1}".format(sqr,priority))
                         self.list.put(sqr, priority)
                         self.stepCount += 1
                         camefrom[sqr] = parent
+                        self.pathRecord.append((parent,sqr))
                         self.visited.append(parent)
 
-        loge("    FAILURE: you done goofed\n")
+        log("    FAILURE: you done goofed\n")
         return (0,0)
 class PriorityQueue:
     def __init__(self):
@@ -283,6 +289,6 @@ class PriorityQueue:
         return len(self.elements) == 0
     def put(self,item,priority):
         heapq.heappush(self.elements, (priority, item))
-        loge("    pushing {0}".format(item))
+        log("    pushing {0}".format(item))
     def get(self):
         return heapq.heappop(self.elements)[1]
