@@ -9,7 +9,7 @@ import copy
 DEBUG = False
 
 def log(s):
-    if DEBUG == False:
+    if DEBUG == True:
         print(s)
 #:::::constructor:::::
 class envi:
