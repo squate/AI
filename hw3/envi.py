@@ -9,7 +9,7 @@ import copy
 DEBUG = False
 
 def log(s):
-    if DEBUG == True:
+    if DEBUG == False:
         print(s)
 #:::::constructor:::::
 class envi:
@@ -63,10 +63,9 @@ class envi:
         for i in range(self.sidelength):
             for j in range(self.sidelength):
                 self.nodes[i][j] = 0
-        self.makeEdges()
         self.nodes[self.sidelength-1][self.sidelength-1] = 3
         self.addWalls()
-        self.makeEdges()
+        self.edges = self.makeEdges()
     def visit(self,x,y):
         log("visiting{0},{1}".format(x,y))
         self.nodes[x][y] = 2
