@@ -14,7 +14,7 @@ def main():
     dungeon = envi(6, False)
     bruce = Agent()
     totalGreed = 0
-    finalTest(bruce,dungeon,100)
+    finalTest(bruce,dungeon,1000)
 def finalTest(agent,environment,reps):
     totalBFS = 0
     totalDFS = 0
@@ -106,13 +106,13 @@ def finalTest(agent,environment,reps):
             totalCostAStar += run[2]
         else:
             totalFail += 1
-            dungeon.showgrid(agent)
+            #dungeon.showgrid(agent)
 
     if (totalFail<reps):
         avg = totalStepsAStar / (reps - totalFail)
         odds = 100*(reps-totalFail)/reps
         print("    Avg Steps to exit: {0}".format(avg))
-        print("    Average cost per found path : {0} (would be {1} if not taken into account)".format((totalCostAStar/reps),(21*(environment.getSideLength()-1))))
+        print("    Average cost per found path : {0} (would be {1} if not taken into account)".format((totalCostAStar/reps),(21*(environment.getSideLength()-1)+1)))
         print("    Percent success: {0}\n".format(odds))
     else:
         print("    Failed every one of its {0} runs".format(reps))
