@@ -243,6 +243,7 @@ class Agent: #Initialize the Agent with Variables
                 log("FAILURE, no available choices from this point")
                 return (0,0)
     def aStar(self,env):
+        loge("A* is go")
         self.resetAttributes()
         self.list = PriorityQueue()
         self.list.put(0,0)
@@ -251,30 +252,30 @@ class Agent: #Initialize the Agent with Variables
         camefrom = {}
         camefrom[0] = None
         while len(self.list.elements) > 0:
-            loge("list as of now: {0}".format(self.list.elements))
+            loge("    list as of now: {0}".format(self.list.elements))
             parent = int(self.list.get())
-            loge("checking square {}'s neighbors".format(parent))
             #check to see if we made it
             if self.squareToNode(env, parent) == 3:
-                loge("SUCCESS! Path found!")
-                loge("total cost: {0}".format(costForNow[parent]))
+                loge("    SUCCESS! Path found! total cost: {0}\n".format(costForNow[parent]))
                 return (1, self.stepCount,costForNow[parent])
             #expand current node
+            loge("    checking square {}'s neighbors".format(parent))
             options = self.expand(env, parent)
             if len(options) > 0:
-                loge("options: {0}".format(options))
+                loge("    options: {0}".format(options))
                 for sqr in options:
                     newCost = costForNow[parent] + env.getCost(parent, int(sqr))
                     if sqr not in costForNow or newCost < costForNow[sqr]:#or self.squareToNode(env,sqr) == 3:
                         costForNow[sqr] = newCost
                         priority = newCost + self.findHyoo(env, sqr)
-                        loge("cost to move to {0}: {1}".format(sqr,priority))
+                        loge("    cost to move to {0}: {1}".format(sqr,priority))
                         self.list.put(sqr, priority)
                         self.stepCount += 1
                         camefrom[sqr] = parent
+                        self.visited.append(parent)
+
+        loge("    FAILURE: you done goofed\n")
         return (0,0)
-
-
 class PriorityQueue:
     def __init__(self):
         self.elements = []
@@ -282,6 +283,6 @@ class PriorityQueue:
         return len(self.elements) == 0
     def put(self,item,priority):
         heapq.heappush(self.elements, (priority, item))
-        loge("pushing {0}".format(item))
+        loge("    pushing {0}".format(item))
     def get(self):
         return heapq.heappop(self.elements)[1]
