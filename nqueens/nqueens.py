@@ -16,7 +16,7 @@ def log(n):
 
 
 class Env():
-#initialization
+    #initialization
     def __init__(self):
         self.size = 4
         self.columns = self.makeColumns(self.size)
@@ -26,7 +26,9 @@ class Env():
         for i in range(n):
             col.append([random.randint(0,self.size-1),0])
         return col
-#"danger" detection
+
+    #"danger" detection
+
     def detectDanger(self,queens): #pass the queens over instead of directly manipulating such that we can pass "clones" of the list with alternate queen placement
         self.resetDanger(queens)
         danger = 0
@@ -52,13 +54,21 @@ class Env():
     def noteDanger(self, i, j, queens):
         queens[i][1] += 1
         queens[j][1] += 1
-#Solutions:
-    def hillSolve(self,queens):
-        while self.totalDanger > 0:
-            return
+
+    #Solutions:
+    
+    #BruteSolve will take the most contraining element, try to change it such that the next iteration has less conflicts
+    #can get stuck if changing the most contraining would only result in a worse total value
+    def bruteSolve(self,queens):
+        #while self.totalDanger > 0:
+        mostConing = queens.index(max(queens,key = lambda item:item[1]))
+        log("The index of the most constraining variable is: {0}".format(mostConing))   
+        #    for 
         return
-#Display Purposes
-#does not need to be passed the columns cus it doesn't need to be multi-use
+
+    #Display Purposes
+    #does not need to be passed the columns cus it doesn't need to be multi-use
+
     def showcol(self):
         print("this is what the list looks like (row of queen, number of collisions):")
         print("{0}".format(self.columns))
@@ -74,7 +84,9 @@ class Env():
             print("{}".format(grid[k]))
 
 # Run the Juuls
+
 def main():
     place = Env()
     place.showcol()
+    place.bruteSolve(place.columns)
 main()
