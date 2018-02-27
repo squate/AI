@@ -19,46 +19,54 @@ class Env():
 #initialization
     def __init__(self):
         self.size = 4
-        self.queens = self.makeColumns(self.size)
-        self.totalDanger = self.detectDanger()
+        self.columns = self.makeColumns(self.size)
+        self.totalDanger = self.detectDanger(self.columns)
     def makeColumns(self,n):
         col = list()
         for i in range(n):
             col.append([random.randint(0,self.size-1),0])
         return col
 #"danger" detection
-    def detectDanger(self):
-        self.resetDanger()
+    def detectDanger(self,queens): #pass the queens over instead of directly manipulating such that we can pass "clones" of the list with alternate queen placement
+        self.resetDanger(queens)
+        danger = 0
         for i in range(self.size):
             for j in range(i+1, self.size):
                 #if on same row as other
-                if self.queens[i][0] == self.queens[j][0]:
-                    self.noteDanger(i, j)
+                if queens[i][0] == queens[j][0]:
+                    danger += 1
+                    self.noteDanger(i,j,queens)
                 #if same up-right diagonal from queens[i]
-                if self.queens[i][0] == (self.queens[j][0] + (j-i)):
-                    self.noteDanger(i, j)
+                if queens[i][0] == (queens[j][0] + (j-i)):
+                    danger += 1
+                    self.noteDanger(i,j,queens)
                 #same down-right diagonal from queens[i]
-                if self.queens[i][0] == (self.queens[j][0] + (i-j)):
-                    self.noteDanger(i, j)
-    def resetDanger(self):
-        self.totalDanger = 0
+                if queens[i][0] == (queens[j][0] + (i-j)):
+                    danger +=1
+                    self.noteDanger(i,j,queens)
+        print("total danger = {0}".format(danger))
+        return danger
+    def resetDanger(self,queens):
         for i in range(self.size-1):
-            self.queens[i][1] = 0
-    def noteDanger(self, i, j):
-        self.totalDanger += 1
-        self.queens[i][1] += 1
-        self.queens[j][1] += 1
-#solutions:
-
+            queens[i][1] = 0
+    def noteDanger(self, i, j, queens):
+        queens[i][1] += 1
+        queens[j][1] += 1
+#Solutions:
+    def hillSolve(self,queens):
+        while self.totalDanger > 0:
+            return
+        return
 #Display Purposes
+#does not need to be passed the columns cus it doesn't need to be multi-use
     def showcol(self):
         print("this is what the list looks like (row of queen, number of collisions):")
-        print("{0}".format(self.queens))
+        print("{0}".format(self.columns))
         print("this is what the grid would look like based on the list")
         grid = [[] for i in range(self.size)]
         for j in range(self.size):
             for i in range(self.size):
-                if self.queens[i][0] == j : 
+                if self.columns[i][0] == j : 
                     grid[j].append("X")
                 else:
                     grid[j].append("o")
