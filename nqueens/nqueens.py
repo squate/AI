@@ -9,19 +9,24 @@ def log(n):
     if DEBUG == True:
         print(n)
 
-class Env():
+#Class Env will be a n x n "grid"
+#The problem can only have one queen per column, so we will represent the grid as a single "flat" list
+# like [0,1,2,3] where the numbers each represent the queen's position in that column
+#The variable totalDanger will keep track of if a win condition has been met
 
+
+class Env():
+#initialization
     def __init__(self):
         self.size = 4
         self.queens = self.makeColumns(self.size)
         self.totalDanger = self.detectDanger()
-
     def makeColumns(self,n):
         col = list()
         for i in range(n):
             col.append([random.randint(0,self.size-1),0])
         return col
-
+#"danger" detection
     def detectDanger(self):
         self.resetDanger()
         for i in range(self.size):
@@ -35,7 +40,6 @@ class Env():
                 #same down-right diagonal from queens[i]
                 if self.queens[i][0] == (self.queens[j][0] + (i-j)):
                     self.noteDanger(i, j)
-
     def resetDanger(self):
         self.totalDanger = 0
         for i in range(self.size-1):
@@ -44,7 +48,7 @@ class Env():
         self.totalDanger += 1
         self.queens[i][1] += 1
         self.queens[j][1] += 1
-
+#solutions:
 
 #Display Purposes
     def showcol(self):
