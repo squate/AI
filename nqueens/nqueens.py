@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # Nate Levy, Alan Sato
 # n-queens problem
-
+import copy
 import random
 DEBUG = True
 
@@ -46,12 +46,12 @@ class Env():
                 if queens[i][0] == (queens[j][0] + (i-j)):
                     danger +=1
                     self.noteDanger(i,j,queens)
-        print("total danger = {0}".format(danger))
+        #log("total danger for this configuration= {0}".format(danger))
         return danger
     def resetDanger(self,queens):
-        for i in range(self.size-1):
+        for i in range(self.size):
             queens[i][1] = 0
-    def noteDanger(self, i, j, queens):
+    def noteDanger(self, i, j,queens):
         queens[i][1] += 1
         queens[j][1] += 1
 
@@ -59,12 +59,39 @@ class Env():
     
     #BruteSolve will take the most contraining element, try to change it such that the next iteration has less conflicts
     #can get stuck if changing the most contraining would only result in a worse total value
-    def bruteSolve(self,queens):
-        #while self.totalDanger > 0:
-        mostConing = queens.index(max(queens,key = lambda item:item[1]))
-        log("The index of the most constraining variable is: {0}".format(mostConing))   
-        #    for 
-        return
+    def bruteSolve(self):
+        queens = self.columns
+        while self.totalDanger > 0:
+            mostConing = queens.index(max(queens,key = lambda item:item[1]))#finding the most constraining by the second element in the tuple (which is a list)
+            log("current configuration: {0}".format(queens))
+            log("The index of the most constraining variable is: {0}".format(mostConing))
+            nextBest = self.totalDanger
+            nextBestConfig = queens[mostConing][0]   
+            for i in range(self.size):
+                copyQueens = list(queens)
+                copyQueens[mostConing][0]=i
+                configDanger = self.detectDanger(copyQueens)
+                log("new configuration possibility:{0}".format(copyQueens))
+                if configDanger<nextBest:
+                    nextBest = configDanger
+                    log("This is the nextBest config at  {0} ( supposed to be {0}) violations".format(nextBest,configDanger))
+                    nextBestConfig = i
+            if nextBest<self.totalDanger:
+                log("Changing to config {0} with the danger of {1} which is better than {2}".format(nextBestConfig,nextBest,self.totalDanger))
+                self.columns[mostConing][0]=nextBestConfig
+                self.totalDanger=self.detectDanger(queens)
+                log(queens)
+                self.showcol()
+            else:
+                break
+        if self.totalDanger == 0:
+            print("Success")
+            print("final config:")
+            self.showcol()
+            return 1
+        else:
+            print("failure")
+            return 0
 
     #Display Purposes
     #does not need to be passed the columns cus it doesn't need to be multi-use
@@ -88,5 +115,5 @@ class Env():
 def main():
     place = Env()
     place.showcol()
-    place.bruteSolve(place.columns)
+    place.bruteSolve()
 main()
