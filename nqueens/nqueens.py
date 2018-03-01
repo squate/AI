@@ -60,22 +60,34 @@ class Env():
     #solve will take the most contraining element, try to change it such that the next iteration has less conflicts
     #can get stuck if changing the most contraining would only result in a worse total value
     def solve(self):
-        queens = self.columns
-        while self.totalDanger > 0:
+        queens = self.columns #Here I make another pointer to self.columns so that we dont have to type self.columns everywhere
+        while self.totalDanger > 0: 
+            #This part will find the most constraining node's index
             mostConing = queens.index(max(queens,key = lambda item:item[1]))#finding the most constraining by the second element in the tuple (which is a list)
             log("current configuration: {0}".format(queens))
             log("The index of the most constraining variable is: {0}".format(mostConing))
+        
+            #Here I create the variables nextBest and nextBestConfig
+            #NextBest is the amount of violations the "next best" configuration has
+            #the nextBestConfig records the number row the queen in question ("the most constraining queen") in the "next best" configuration
             nextBest = self.totalDanger
-            nextBestConfig = queens[mostConing][0]   
+            nextBestConfig = queens[mostConing][0]
+
+               
             for i in range(self.size):
+                #Here i make a copy of queens, and change the row of the most constraining queen to i
                 copyQueens = list(queens)
                 copyQueens[mostConing][0]=i
+                #dont forget to detectDanger such that copyQueens has updated violation information
                 configDanger = self.detectDanger(copyQueens)
                 log("new configuration possibility:{0}".format(copyQueens))
+                #if the configuration has less violations than the current standing next best, log this configuration's danger and queen's row
                 if configDanger<nextBest:
                     nextBest = configDanger
                     log("This is the nextBest config at  {0} ( supposed to be {0}) violations".format(nextBest,configDanger))
                     nextBestConfig = i
+            #Once it checks every possibility for the queen
+            #if there was a nextBest then change the current to the next best
             if nextBest<self.totalDanger:
                 log("Changing to config {0} with the danger of {1} which is better than {2}".format(nextBestConfig,nextBest,self.totalDanger))
                 self.columns[mostConing][0]=nextBestConfig
@@ -84,6 +96,7 @@ class Env():
                 self.showcol()
             else:
                 break
+        #once the loop ends, if your total danger was 0 you succeeded. If not...
         if self.totalDanger == 0:
             log("Success")
             log("final config:")
