@@ -3,7 +3,7 @@
 # n-queens problem
 import copy
 import random
-DEBUG = True
+DEBUG = False
 
 def log(n):
     if DEBUG == True:
@@ -17,8 +17,8 @@ def log(n):
 
 class Env():
     #initialization
-    def __init__(self):
-        self.size = 4
+    def __init__(self,big):
+        self.size = big
         self.columns = self.makeColumns(self.size)
         self.totalDanger = self.detectDanger(self.columns)
     def makeColumns(self,n):
@@ -57,9 +57,9 @@ class Env():
 
     #Solutions:
     
-    #BruteSolve will take the most contraining element, try to change it such that the next iteration has less conflicts
+    #solve will take the most contraining element, try to change it such that the next iteration has less conflicts
     #can get stuck if changing the most contraining would only result in a worse total value
-    def bruteSolve(self):
+    def solve(self):
         queens = self.columns
         while self.totalDanger > 0:
             mostConing = queens.index(max(queens,key = lambda item:item[1]))#finding the most constraining by the second element in the tuple (which is a list)
@@ -85,21 +85,21 @@ class Env():
             else:
                 break
         if self.totalDanger == 0:
-            print("Success")
-            print("final config:")
+            log("Success")
+            log("final config:")
             self.showcol()
             return 1
         else:
-            print("failure")
+            log("failure")
             return 0
-
+    #
     #Display Purposes
     #does not need to be passed the columns cus it doesn't need to be multi-use
 
     def showcol(self):
-        print("this is what the list looks like (row of queen, number of collisions):")
-        print("{0}".format(self.columns))
-        print("this is what the grid would look like based on the list")
+        log("this is what the list looks like (row of queen, number of collisions):")
+        log("{0}".format(self.columns))
+        log("this is what the grid would look like based on the list")
         grid = [[] for i in range(self.size)]
         for j in range(self.size):
             for i in range(self.size):
@@ -108,12 +108,19 @@ class Env():
                 else:
                     grid[j].append("o")
         for k in range(self.size):
-            print("{}".format(grid[k]))
+            log("{0}".format(grid[k]))
 
+#tests
+def solvetest(runs,size):
+    succ = 0
+    for i in range(runs):
+        place = Env(size)
+        x = place.solve()
+        if x == 1:
+            succ +=1
+    print("solve got {0}/{1}".format(succ,runs))
 # Run the Juuls
 
 def main():
-    place = Env()
-    place.showcol()
-    place.bruteSolve()
+    solvetest(1000,4)
 main()
