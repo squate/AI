@@ -3,6 +3,7 @@
 # n-queens problem
 import copy
 import random
+import math
 DEBUG = False
 
 def log(n):
@@ -21,6 +22,7 @@ class Env():
         self.size = big
         self.columns = self.makeColumns(self.size)
         self.totalDanger = self.detectDanger(self.columns)
+        self.T = 1.0
     def makeColumns(self,n):
         col = list()
         for i in range(n):
@@ -56,49 +58,15 @@ class Env():
         queens[j][1] += 1
 
     #Solutions:
-    
+
     #solve will take the most contraining element, try to change it such that the next iteration has less conflicts
     #can get stuck if changing the most contraining would only result in a worse total value
     def solve(self):
         queens = self.columns #Here I make another pointer to self.columns so that we dont have to type self.columns everywhere
-        while self.totalDanger > 0: 
-            #This part will find the most constraining node's index
-            mostConing = queens.index(max(queens,key = lambda item:item[1]))#finding the most constraining by the second element in the tuple (which is a list)
-            log("current configuration: {0}".format(queens))
-            log("The index of the most constraining variable is: {0}".format(mostConing))
-        
-            #Here I create the variables nextBest and nextBestConfig
-            #NextBest is the amount of violations the "next best" configuration has
-            #the nextBestConfig records the number row the queen in question ("the most constraining queen") in the "next best" configuration
-            nextBest = self.totalDanger
-            nextBestConfig = queens[mostConing][0]
-
-               
-            for i in range(self.size):
-                #Here i make a copy of queens, and change the row of the most constraining queen to i
-                copyQueens = list(queens)
-                copyQueens[mostConing][0]=i
-                #dont forget to detectDanger such that copyQueens has updated violation information
-                configDanger = self.detectDanger(copyQueens)
-                log("new configuration possibility:{0}".format(copyQueens))
-                #if the configuration has less violations than the current standing next best, log this configuration's danger and queen's row
-                if configDanger<nextBest:
-                    nextBest = configDanger
-                    log("This is the nextBest config at  {0} ( supposed to be {0}) violations".format(nextBest,configDanger))
-                    nextBestConfig = i
-            #Once it checks every possibility for the queen
-            #if there was a nextBest then change the current to the next best
-            if nextBest<self.totalDanger:
-                log("Changing to config {0} with the danger of {1} which is better than {2}".format(nextBestConfig,nextBest,self.totalDanger))
-                self.columns[mostConing][0]=nextBestConfig
-                self.totalDanger=self.detectDanger(queens)
-                log(queens)
-                self.showcol()
-            else:
-                break
+        results = self.anneal()
         #once the loop ends, if your total danger was 0 you succeeded. If not...
-        if self.totalDanger == 0:
-            log("Success")
+        if results[1] == 0:
+            log("success")
             log("final config:")
             self.showcol()
             return 1
@@ -108,6 +76,100 @@ class Env():
     #
     #Display Purposes
     #does not need to be passed the columns cus it doesn't need to be multi-use
+    def anneal(self):
+        log("attempting annealing")
+        self.T = 1.0
+        old_cost = self.totalDanger
+        alpha = 0.9
+        T_min = 0.0001
+        while self.T > T_min:
+            log("T: {0}".format(self.T))
+            z = 1
+            while z <= 4:
+                n = self.neighbor()
+                mostCon = n[0]
+                new_sol = n[1]
+                new_cost = n[2]
+                prob = self.acceptanceProbability(new_cost, self.totalDanger)
+                log("acceptance probablility: {0}".format(prob))
+                if prob > random.random():
+                    self.columns=new_sol
+                    self.totalDanger = new_cost
+                    log("we got a move worth making")
+                z += 1
+            self.T = self.T*alpha
+            log("diminishing t")
+        return (self.columns, self.totalDanger)
+
+    def neighbor(self):
+        #This part will find the most constraining node's index
+        queens = self.columns
+        mostConing = queens.index(max(queens,key = lambda item:item[1]))#finding the most constraining by the second element in the tuple (which is a list)
+        log("current configuration: {0}".format(queens))
+        log("The index of the most constraining variable is: {0}".format(mostConing))
+        #Here I create the variables nextBest and nextBestConfig
+        #NextBest is the amount of violations the "next best" configuration has
+        #the nextBestConfig records the number row the queen in question ("the most constraining queen") in the "next best" configuration
+        nextBest = self.totalDanger
+        nextBestConfig = queens[mostConing][0]
+        for i in range(self.size):
+        #Here i make a copy of queens, and change the row of the most constraining queen to i
+            copyQueens = list(queens)
+            copyQueens[mostConing][0]=i
+            #dont forget to detectDanger such that copyQueens has updated violation information
+            configDanger = self.detectDanger(copyQueens)
+            log("new configuration possibility:{0}".format(copyQueens))
+            #if the configuration has less violations than the current standing next best, log this configuration's danger and queen's row
+            if configDanger < nextBest:
+                nextBest = configDanger
+                log("Changing to config {0} with the danger of {1} which is better than {2}".format(nextBestConfig,nextBest,self.totalDanger))
+                log("This is the nextBest config at  {0} ( supposed to be {0}) violations".format(nextBest,configDanger))
+                nextBestConfig = i
+        if nextBest < self.totalDanger:
+            self.columns[mostConing][0] = nextBestConfig
+            self.totalDanger = self.detectDanger(queens)
+        #Once it checks every possibility for the queen
+        #if there was a nextBest then change the current to the next best
+        return (mostConing,self.columns,nextBest)
+
+    def neighbor2(self):
+        #This part will find the most constraining node's index
+        queens = self.columns
+        mostConing = random.randint(0,self.size-1)
+        log("current configuration: {0}".format(queens))
+        log("The index of the most constraining variable is: {0}".format(mostConing))
+        #Here I create the variables nextBest and nextBestConfig
+        #NextBest is the amount of violations the "next best" configuration has
+        #the nextBestConfig records the number row the queen in question ("the most constraining queen") in the "next best" configuration
+        nextBest = self.totalDanger
+        nextBestConfig = queens[mostConing][0]
+        for i in range(self.size):
+        #Here i make a copy of queens, and change the row of the most constraining queen to i
+            copyQueens = list(queens)
+            copyQueens[mostConing][0]=i
+            #dont forget to detectDanger such that copyQueens has updated violation information
+            configDanger = self.detectDanger(copyQueens)
+            log("new configuration possibility:{0}".format(copyQueens))
+            #if the configuration has less violations than the current standing next best, log this configuration's danger and queen's row
+            if configDanger < nextBest:
+                nextBest = configDanger
+                log("Changing to config {0} with the danger of {1} which is better than {2}".format(nextBestConfig,nextBest,self.totalDanger))
+                log("This is the nextBest config at  {0} ( supposed to be {0}) violations".format(nextBest,configDanger))
+                nextBestConfig = i
+        if nextBest < self.totalDanger:
+            self.columns[mostConing][0] = nextBestConfig
+            self.totalDanger = self.detectDanger(queens)
+        #Once it checks every possibility for the queen
+        #if there was a nextBest then change the current to the next best
+        return (mostConing,self.columns,nextBest)
+
+    def acceptanceProbability(self, new, old):
+        fnew = float(new)
+        fold = float(old)
+        log("new: {0}. old: {1}".format(new, old))
+        prob =  math.exp((fnew-fold)/self.T)
+        return prob
+
 
     def showcol(self):
         log("this is what the list looks like (row of queen, number of collisions):")
@@ -116,7 +178,7 @@ class Env():
         grid = [[] for i in range(self.size)]
         for j in range(self.size):
             for i in range(self.size):
-                if self.columns[i][0] == j : 
+                if self.columns[i][0] == j :
                     grid[j].append("X")
                 else:
                     grid[j].append("o")
@@ -131,6 +193,7 @@ def solvetest(runs,size):
         x = place.solve()
         if x == 1:
             succ +=1
+        print("{0}/{1}".format(succ,i))
     print("solve got {0}/{1}".format(succ,runs))
 # Run the Juuls
 
