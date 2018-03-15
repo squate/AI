@@ -1,0 +1,7 @@
+nano plan.txt
+
+Migos
+
+Input: (ogstr: string of text)
+1. Parse into phrases/bars, store in bars[]
+	a. how to divide

@@ -1,0 +1,26 @@
+Migos adlibs to text
+	pay attention to rhythm?
+	know when a phrase ends?
+	
+"Swoocin' right into the game" --> "Swoocin' right into the game (SWOOCE)"
+
+	sounds associated with concepts, situations, objects, vibe(?)
+	
+
+	what part of phrase to adlib?
+		could depend on mode:
+			humor; hard; rich; onamot 
+			isolate vibe, let that inform wselection process
+	default to most satisfying word stated, maybe variaton of it
+	"Friends with the dog in the bush"
+		- [dog noise]-look up list of dog noises, find one with similiar vowels
+		- foliage!
+		- friends
+		- and, as always, skrrt
+
+variable that sets probablility of defaulting to a generic adlib (ex: skrrt, gun noise, ay, ya)
+
+turn text into phrases that sound good,
+	for each phrase, find a word to say that like makes sense but comes from left field
+
+		
