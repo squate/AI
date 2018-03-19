@@ -41,6 +41,10 @@ def get_bigrams(words):
         prev_word = w
         
     #convert this bigram dump to a matrix of words, with bigram prob stored
+    w1 = []
+    for i in bigram_dump:
+        bigram_mtx.append[i]
+        
     return bigram_dump
 
 def main():
